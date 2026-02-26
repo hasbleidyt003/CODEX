@@ -1,1 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PQR Agente — Mi Bandeja</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b10;
+    --surface: #0e1219;
+    --surface2: #131720;
+    --border: #1a2030;
+    --accent: #22d3ee;
+    --accent2: #818cf8;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --text: #e2e8f0;
+    --muted: #3d4a60;
+    --muted2: #64748b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Syne',sans-serif; min-height:100vh; }
 
+  body::after {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity:0.4;
+  }
+
+  .login-screen {
+    position:fixed; inset:0; z-index:1000;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--bg);
+  }
+  .login-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:20px; padding:40px; width:90%; max-width:380px;
+    text-align:center; position:relative; overflow:hidden;
+  }
+  .login-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .login-logo { font-size:40px; margin-bottom:16px; }
+  .login-title { font-size:22px; font-weight:800; margin-bottom:4px; }
+  .login-sub { font-size:13px; color:var(--muted2); margin-bottom:28px; }
+  .login-field { margin-bottom:14px; text-align:left; }
+  .login-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted2); margin-bottom:6px; display:block; }
+  .login-input {
+    width:100%; background:var(--surface2); border:1px solid var(--border);
+    color:var(--text); padding:11px 14px; border-radius:10px;
+    font-family:'Syne',sans-serif; font-size:14px; transition:border-color 0.2s;
+  }
+  .login-input:focus { outline:none; border-color:var(--accent); }
+  .pin-row { display:flex; gap:10px; justify-content:center; margin:8px 0; }
+  .pin-dot {
+    width:52px; height:52px; border-radius:12px;
+    background:var(--surface2); border:1px solid var(--border);
+    font-size:22px; color:var(--text); font-family:'Syne',sans-serif; font-weight:700;
+    cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center;
+  }
+  .pin-dot:hover { border-color:var(--accent); background:rgba(34,211,238,0.08); }
+  .pin-dot:active { transform:scale(0.93); }
+  .pin-display { display:flex; gap:8px; justify-content:center; margin-bottom:20px; }
+  .pin-circle { width:14px; height:14px; border-radius:50%; border:2px solid var(--muted); transition:all 0.2s; }
+  .pin-circle.filled { background:var(--accent); border-color:var(--accent); box-shadow:0 0 8px var(--accent); }
+  .login-btn {
+    width:100%; padding:12px; border-radius:10px; border:none;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#000; font-family:'Syne',sans-serif; font-size:14px;
+    font-weight:800; cursor:pointer; transition:all 0.2s; margin-top:8px;
+  }
+  .login-btn:hover { opacity:0.9; transform:translateY(-1px); }
+  .login-error { color:var(--red); font-size:12px; margin-top:8px; min-height:16px; }
+
+  .header {
+    position:sticky; top:0; z-index:100;
+    background:rgba(8,11,16,0.96); backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+    padding:0 24px; height:60px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .agent-pill { display:flex; align-items:center; gap:10px; }
+  .agent-av { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; color:#000; flex-shrink:0; }
+  .agent-nm { font-size:14px; font-weight:700; }
+  .header-actions { display:flex; gap:10px; align-items:center; }
+  .sync-btn { display:flex; align-items:center; gap:6px; background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.2); color:var(--accent); padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'Syne',sans-serif; font-size:12px; font-weight:600; transition:all 0.2s; }
+  .sync-btn:hover { background:rgba(34,211,238,0.15); }
+  .logout-btn { background:none; border:1px solid var(--border); color:var(--muted2); padding:7px 12px; border-radius:8px; cursor:pointer; font-family:'Syne',sans-serif; font-size:12px; transition:all 0.2s; }
+  .logout-btn:hover { color:var(--red); border-color:var(--red); }
+
+  .main { position:relative; z-index:1; padding:20px 24px; max-width:1400px; margin:0 auto; }
+
+  .my-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+  .my-stat { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; text-align:center; transition:transform 0.2s; }
+  .my-stat:hover { transform:translateY(-2px); }
+  .my-stat-val { font-size:28px; font-weight:800; font-family:'JetBrains Mono',monospace; }
+  .my-stat-lbl { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--muted2); margin-top:4px; }
+
+  .content-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:900px) { .content-grid { grid-template-columns:1fr; } }
+
+  .panel { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .panel-header { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .panel-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; gap:8px; }
+  .dot { width:6px; height:6px; border-radius:50%; }
+  .count-badge { font-family:'JetBrains Mono',monospace; font-size:11px; padding:2px 8px; border-radius:10px; background:rgba(34,211,238,0.1); color:var(--accent); border:1px solid rgba(34,211,238,0.2); }
+
+  .email-list { max-height:500px; overflow-y:auto; }
+  .email-list::-webkit-scrollbar { width:3px; }
+  .email-list::-webkit-scrollbar-thumb { background:var(--border); }
+  .email-item { padding:14px 18px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; position:relative; }
+  .email-item:last-child { border-bottom:none; }
+  .email-item:hover { background:var(--surface2); }
+  .email-item.active { background:rgba(34,211,238,0.06); border-left:3px solid var(--accent); }
+  .email-item.unread .email-subject { font-weight:800; }
+  .email-unread-dot { position:absolute; right:18px; top:50%; transform:translateY(-50%); width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 6px var(--accent); }
+  .email-from { font-size:11px; color:var(--muted2); margin-bottom:3px; }
+  .email-subject { font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; }
+  .email-preview-txt { font-size:11px; color:var(--muted2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .email-time { font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-top:5px; }
+
+  .empty-state { padding:40px 20px; text-align:center; color:var(--muted); }
+  .empty-state .icon { font-size:36px; margin-bottom:10px; opacity:0.3; }
+
+  .detail-panel { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-top:16px; display:none; }
+  .detail-panel.show { display:block; animation:fadeSlide 0.3s ease; }
+  @keyframes fadeSlide { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  
+  .detail-top { padding:18px 20px; border-bottom:1px solid var(--border); }
+  .detail-subject { font-size:17px; font-weight:700; margin-bottom:10px; line-height:1.4; }
+  .detail-info { display:flex; gap:16px; flex-wrap:wrap; }
+  .info-chip { font-size:11px; color:var(--muted2); display:flex; align-items:center; gap:5px; }
+  .info-chip strong { color:var(--text); }
+  .detail-body { padding:18px 20px; max-height:420px; overflow-y:auto; font-size:13px; line-height:1.8; }
+  .detail-body::-webkit-scrollbar { width:3px; }
+  .detail-body::-webkit-scrollbar-thumb { background:var(--border); }
+  .detail-body .html-wrap { background:#fff; color:#111; padding:16px; border-radius:8px; }
+  .detail-actions { padding:14px 18px; border-top:1px solid var(--border); display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  
+  .btn { padding:8px 14px; border-radius:8px; font-family:'Syne',sans-serif; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all 0.2s; display:inline-flex; align-items:center; gap:5px; }
+  .btn-success { background:rgba(74,222,128,0.12); color:var(--green); border:1px solid rgba(74,222,128,0.3); }
+  .btn-success:hover { background:rgba(74,222,128,0.22); }
+  .btn-warning { background:rgba(251,191,36,0.12); color:var(--yellow); border:1px solid rgba(251,191,36,0.3); }
+  .btn-warning:hover { background:rgba(251,191,36,0.22); }
+  .btn-ghost { background:transparent; color:var(--muted2); border:1px solid var(--border); }
+  .btn-ghost:hover { color:var(--text); }
+  .btn-accent { background:rgba(34,211,238,0.1); color:var(--accent); border:1px solid rgba(34,211,238,0.25); }
+  .btn-accent:hover { background:rgba(34,211,238,0.2); }
+
+  .notes-area { width:100%; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 12px; border-radius:8px; font-family:'Syne',sans-serif; font-size:12px; resize:vertical; min-height:72px; }
+  .notes-area:focus { outline:none; border-color:var(--accent); }
+  .notes-row { padding:12px 18px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:8px; }
+
+  .hist-section { padding:12px 18px; border-top:1px solid var(--border); }
+  .hist-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted2); margin-bottom:8px; }
+  .hist-item { display:flex; gap:10px; margin-bottom:6px; }
+  .hist-time { font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; white-space:nowrap; }
+  .hist-text { font-size:11px; color:var(--muted2); }
+
+  .toast-container { position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:6px; }
+  .toast { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:11px 14px; font-size:12px; font-weight:500; display:flex; align-items:center; gap:8px; animation:slideIn 0.3s; box-shadow:0 4px 24px rgba(0,0,0,0.5); }
+  @keyframes slideIn { from{transform:translateX(120%);opacity:0} to{transform:translateX(0);opacity:1} }
+  .toast.success { border-color:rgba(74,222,128,0.3); }
+  .toast.error { border-color:rgba(248,113,113,0.3); }
+
+  @media(max-width:600px) {
+    .main { padding:12px; }
+    .my-stats { grid-template-columns:repeat(2,1fr); }
+    .header { padding:0 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">📬</div>
+    <div class="login-title">PQR Agente</div>
+    <div class="login-sub">Ingresa con tu correo y PIN de 4 dígitos</div>
+    
+    <div class="login-field">
+      <label class="login-label">Correo Corporativo</label>
+      <input class="login-input" type="email" id="loginEmail" placeholder="tu@empresa.com" autocomplete="email">
+    </div>
+    
+    <div class="login-field">
+      <label class="login-label">PIN de Acceso</label>
+      <div class="pin-display" id="pinDisplay">
+        <div class="pin-circle" id="pc0"></div>
+        <div class="pin-circle" id="pc1"></div>
+        <div class="pin-circle" id="pc2"></div>
+        <div class="pin-circle" id="pc3"></div>
+      </div>
+      <div class="pin-row">
+        <div class="pin-dot" onclick="addPin('1')">1</div>
+        <div class="pin-dot" onclick="addPin('2')">2</div>
+        <div class="pin-dot" onclick="addPin('3')">3</div>
+      </div>
+      <div class="pin-row">
+        <div class="pin-dot" onclick="addPin('4')">4</div>
+        <div class="pin-dot" onclick="addPin('5')">5</div>
+        <div class="pin-dot" onclick="addPin('6')">6</div>
+      </div>
+      <div class="pin-row">
+        <div class="pin-dot" onclick="addPin('7')">7</div>
+        <div class="pin-dot" onclick="addPin('8')">8</div>
+        <div class="pin-dot" onclick="addPin('9')">9</div>
+      </div>
+      <div class="pin-row">
+        <div class="pin-dot" onclick="clearPin()" style="font-size:14px;">⌫</div>
+        <div class="pin-dot" onclick="addPin('0')">0</div>
+        <div class="pin-dot" onclick="doLogin()" style="background:rgba(34,211,238,0.1);color:var(--accent);border-color:rgba(34,211,238,0.3);">✓</div>
+      </div>
+    </div>
+    
+    <button class="login-btn" onclick="doLogin()">Ingresar</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<header class="header" id="appHeader" style="display:none;">
+  <div class="agent-pill">
+    <div class="agent-av" id="agentAv">?</div>
+    <div>
+      <div class="agent-nm" id="agentNm">Agente</div>
+      <div style="font-size:11px;color:var(--muted2);font-family:'JetBrains Mono',monospace" id="lastSyncLbl">—</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="sync-btn" onclick="syncData()">↻ Actualizar</button>
+    <button class="logout-btn" onclick="logout()">Salir</button>
+  </div>
+</header>
+
+<main class="main" id="appMain" style="display:none;">
+  <div class="my-stats">
+    <div class="my-stat">
+      <div class="my-stat-val" id="myTotal" style="color:var(--accent)">—</div>
+      <div class="my-stat-lbl">Asignados</div>
+    </div>
+    <div class="my-stat">
+      <div class="my-stat-val" id="myActive" style="color:var(--accent2)">—</div>
+      <div class="my-stat-lbl">En Gestión</div>
+    </div>
+    <div class="my-stat">
+      <div class="my-stat-val" id="myManaged" style="color:var(--yellow)">—</div>
+      <div class="my-stat-lbl">Gestionados</div>
+    </div>
+    <div class="my-stat">
+      <div class="my-stat-val" id="mySolved" style="color:var(--green)">—</div>
+      <div class="my-stat-lbl">Solucionados</div>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="dot" style="background:var(--accent2);box-shadow:0 0 6px var(--accent2)"></span>
+            Mis Correos Activos
+          </div>
+          <span class="count-badge" id="cntActive">0</span>
+        </div>
+        <div class="email-list" id="listActive">
+          <div class="empty-state"><div class="icon">📭</div><p>Cargando...</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="dot" style="background:var(--green);box-shadow:0 0 6px var(--green)"></span>
+            Gestionados y Solucionados
+          </div>
+          <span class="count-badge" id="cntClosed">0</span>
+        </div>
+        <div class="email-list" id="listClosed">
+          <div class="empty-state"><div class="icon">✅</div><p>Nada aún</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-panel" id="detailPanel">
+    <div id="detailContent"></div>
+  </div>
+</main>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="config.js"></script>
+<script>
+// ============================================================
+// CONFIGURACIÓN (desde config.js)
+// ============================================================
+if (!window.APP_CONFIG) {
+  console.error('❌ Error: No se pudo cargar la configuración');
+  showToast('Error de configuración', 'error');
+}
+
+const SUPABASE_URL = window.APP_CONFIG?.SUPABASE_URL;
+const SUPABASE_KEY = window.APP_CONFIG?.SUPABASE_KEY;
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  agent: null,
+  emails: [],
+  selectedId: null,
+  pin: ''
+};
+
+// ============================================================
+// SUPABASE HELPERS
+// ============================================================
+async function sb(path, method='GET', body=null) {
+  const opts = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Prefer': method === 'POST' ? 'return=representation' : ''
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, opts);
+  if (!r.ok) { const e = await r.text(); throw new Error(e); }
+  try { return await r.json(); } catch { return null; }
+}
+
+// ============================================================
+// PIN LOGIN
+// ============================================================
+function addPin(d) {
+  if (state.pin.length >= 4) return;
+  state.pin += d;
+  updatePinDisplay();
+  if (state.pin.length === 4) setTimeout(doLogin, 200);
+}
+function clearPin() {
+  state.pin = state.pin.slice(0,-1);
+  updatePinDisplay();
+}
+function updatePinDisplay() {
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById(`pc${i}`);
+    if (el) el.classList.toggle('filled', i < state.pin.length);
+  }
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail')?.value.trim();
+  const pin = state.pin;
+  const errEl = document.getElementById('loginError');
+  if (!errEl) return;
+  errEl.textContent = '';
+  
+  if (!email || pin.length !== 4) {
+    errEl.textContent = 'Ingresa tu correo y PIN completo';
+    state.pin = ''; updatePinDisplay();
+    return;
+  }
+
+  try {
+    const agents = await sb(`agentes?email=eq.${encodeURIComponent(email)}&pin=eq.${pin}&activo=eq.true`);
+    if (!agents || !agents.length) {
+      errEl.textContent = 'Correo o PIN incorrecto';
+      state.pin = ''; updatePinDisplay();
+      return;
+    }
+    state.agent = agents[0];
+    sessionStorage.setItem('pqr_agent', JSON.stringify(state.agent));
+    showApp();
+  } catch(e) {
+    errEl.textContent = 'Error de conexión';
+    state.pin = ''; updatePinDisplay();
+  }
+}
+
+function showApp() {
+  const loginScreen = document.getElementById('loginScreen');
+  const appHeader = document.getElementById('appHeader');
+  const appMain = document.getElementById('appMain');
+  const agentAv = document.getElementById('agentAv');
+  const agentNm = document.getElementById('agentNm');
+  
+  if (loginScreen) loginScreen.style.display = 'none';
+  if (appHeader) appHeader.style.display = 'flex';
+  if (appMain) appMain.style.display = 'block';
+  if (agentNm) agentNm.textContent = state.agent.nombre;
+  if (agentAv) agentAv.textContent = state.agent.nombre.charAt(0).toUpperCase();
+  loadMyEmails();
+  setInterval(syncData, 5 * 60 * 1000);
+}
+
+function logout() {
+  sessionStorage.removeItem('pqr_agent');
+  state.agent = null;
+  
+  const loginScreen = document.getElementById('loginScreen');
+  const appHeader = document.getElementById('appHeader');
+  const appMain = document.getElementById('appMain');
+  const loginEmail = document.getElementById('loginEmail');
+  
+  if (loginScreen) loginScreen.style.display = 'flex';
+  if (appHeader) appHeader.style.display = 'none';
+  if (appMain) appMain.style.display = 'none';
+  state.pin = ''; updatePinDisplay();
+  if (loginEmail) loginEmail.value = '';
+}
+
+// ============================================================
+// LOAD EMAILS
+// ============================================================
+async function loadMyEmails() {
+  if (!state.agent) return;
+  try {
+    const data = await sb(`correos?asignado_a=eq.${state.agent.id}&order=fecha.desc`);
+    state.emails = data || [];
+    renderAll();
+    updateMyStats();
+  } catch(e) {
+    showToast('Error cargando correos', 'error');
+  }
+}
+
+function renderAll() {
+  const active = state.emails.filter(e => e.estado === 'gestion');
+  const closed = state.emails.filter(e => ['gestionado','solucionado'].includes(e.estado));
+
+  const cntActive = document.getElementById('cntActive');
+  const cntClosed = document.getElementById('cntClosed');
+  if (cntActive) cntActive.textContent = active.length;
+  if (cntClosed) cntClosed.textContent = closed.length;
+
+  renderList('listActive', active);
+  renderList('listClosed', closed);
+}
+
+function renderList(containerId, emails) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  
+  if (!emails.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">${containerId === 'listActive' ? '🎉' : '📁'}</div><p>${containerId === 'listActive' ? 'Sin correos activos' : 'Sin correos cerrados'}</p></div>`;
+    return;
+  }
+  container.innerHTML = emails.map(email => {
+    const d = new Date(email.fecha);
+    const timeStr = formatDate(d);
+    const statusColor = { gestion:'var(--accent2)', gestionado:'var(--yellow)', solucionado:'var(--green)' }[email.estado] || 'var(--muted)';
+    const statusLabel = { gestion:'En Gestión', gestionado:'Gestionado', solucionado:'Solucionado' }[email.estado] || email.estado;
+    return `
+    <div class="email-item ${email.id === state.selectedId ? 'active' : ''} ${!email.leido ? 'unread' : ''}" onclick="selectEmail(${email.id})">
+      <div class="email-from">${escHtml(email.remitente_nombre || email.remitente)}</div>
+      <div class="email-subject">${escHtml(email.asunto)}</div>
+      <div class="email-preview-txt">${escHtml(email.preview || '')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+        <span style="font-size:10px;color:${statusColor};font-weight:700;">${statusLabel}</span>
+        <span class="email-time">${timeStr}</span>
+      </div>
+      ${!email.leido ? '<div class="email-unread-dot"></div>' : ''}
+    </div>`;
+  }).join('');
+}
+
+function updateMyStats() {
+  const myTotal = document.getElementById('myTotal');
+  const myActive = document.getElementById('myActive');
+  const myManaged = document.getElementById('myManaged');
+  const mySolved = document.getElementById('mySolved');
+  
+  if (myTotal) myTotal.textContent = state.emails.length;
+  if (myActive) myActive.textContent = state.emails.filter(e => e.estado === 'gestion').length;
+  if (myManaged) myManaged.textContent = state.emails.filter(e => e.estado === 'gestionado').length;
+  if (mySolved) mySolved.textContent = state.emails.filter(e => e.estado === 'solucionado').length;
+}
+
+// ============================================================
+// SELECT EMAIL
+// ============================================================
+async function selectEmail(id) {
+  state.selectedId = id;
+  const email = state.emails.find(e => e.id === id);
+  if (!email) return;
+  renderAll();
+
+  let hist = [];
+  try { hist = await sb(`historial?correo_id=eq.${id}&order=fecha.asc`) || []; } catch {}
+
+  const panel = document.getElementById('detailPanel');
+  if (!panel) return;
+  panel.classList.add('show');
+
+  const existingNote = hist.find(h => h.accion === 'nota');
+  const bodyContent = email.cuerpo_html || email.preview || '(Sin contenido)';
+
+  const detailContent = document.getElementById('detailContent');
+  if (!detailContent) return;
+  
+  detailContent.innerHTML = `
+    <div class="detail-top">
+      <div class="detail-subject">${escHtml(email.asunto)}</div>
+      <div class="detail-info">
+        <div class="info-chip">✉️ <strong>${escHtml(email.remitente_nombre || email.remitente)}</strong> &lt;${escHtml(email.remitente)}&gt;</div>
+        <div class="info-chip">📅 <strong>${new Date(email.fecha).toLocaleString('es-CO', {dateStyle:'full',timeStyle:'short'})}</strong></div>
+        <div class="info-chip">📌 Estado: <strong>${{gestion:'En Gestión',gestionado:'Gestionado',solucionado:'Solucionado'}[email.estado] || email.estado}</strong></div>
+        ${email.tiene_adjuntos ? '<div class="info-chip">📎 <strong>Tiene adjuntos</strong></div>' : ''}
+      </div>
+    </div>
+    <div class="detail-body">
+      ${email.cuerpo_tipo === 'html' 
+        ? `<div class="html-wrap">${bodyContent}</div>` 
+        : `<pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;">${escHtml(bodyContent)}</pre>`}
+    </div>
+    <div class="notes-row">
+      <textarea class="notes-area" id="notesInput" placeholder="Agrega una nota o comentario sobre este correo...">${existingNote ? escHtml(existingNote.detalle) : ''}</textarea>
+      <button class="btn btn-accent" onclick="saveNote(${id})">💾 Guardar Nota</button>
+    </div>
+    <div class="detail-actions">
+      ${email.estado === 'gestion' ? `
+        <button class="btn btn-warning" onclick="setStatus(${id},'gestionado')">📁 Marcar Gestionado</button>
+        <button class="btn btn-success" onclick="setStatus(${id},'solucionado')">✅ Marcar Solucionado</button>
+      ` : ''}
+      ${email.estado === 'gestionado' ? `
+        <button class="btn btn-success" onclick="setStatus(${id},'solucionado')">✅ Marcar Solucionado</button>
+        <button class="btn btn-ghost" onclick="setStatus(${id},'gestion')">↩ Reabrir</button>
+      ` : ''}
+      ${email.estado === 'solucionado' ? `
+        <button class="btn btn-ghost" onclick="setStatus(${id},'gestion')">↩ Reabrir</button>
+      ` : ''}
+      <button class="btn btn-ghost" onclick="panel.classList.remove('show');state.selectedId=null;renderAll()">✕ Cerrar</button>
+    </div>
+    ${hist.length ? `
+    <div class="hist-section">
+      <div class="hist-title">Historial del correo</div>
+      ${hist.map(h => `
+        <div class="hist-item">
+          <span class="hist-time">${formatDate(new Date(h.fecha))}</span>
+          <span class="hist-text">${escHtml(h.accion)} — ${escHtml(h.detalle || '')}</span>
+        </div>`).join('')}
+    </div>` : ''}
+  `;
+
+  if (!email.leido) {
+    await sb(`correos?id=eq.${id}`, 'PATCH', { leido: true });
+    const idx = state.emails.findIndex(e => e.id === id);
+    if (idx !== -1) state.emails[idx].leido = true;
+    renderAll();
+  }
+
+  panel.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ============================================================
+// ACTIONS
+// ============================================================
+async function setStatus(id, status) {
+  const email = state.emails.find(e => e.id === id);
+  await sb(`correos?id=eq.${id}`, 'PATCH', {
+    estado: status,
+    fecha_resolucion: ['solucionado','gestionado'].includes(status) ? new Date().toISOString() : null
+  });
+  await sb('historial', 'POST', {
+    correo_id: id,
+    accion: status,
+    detalle: `Marcado como ${status} por ${state.agent.nombre}`,
+    fecha: new Date().toISOString()
+  });
+  const labels = { solucionado:'✅ Solucionado', gestionado:'📁 Gestionado', gestion:'↩ Reabierto' };
+  showToast(`Correo ${labels[status] || status}`, 'success');
+  
+  const panel = document.getElementById('detailPanel');
+  if (panel) panel.classList.remove('show');
+  state.selectedId = null;
+  await loadMyEmails();
+}
+
+async function saveNote(id) {
+  const notesInput = document.getElementById('notesInput');
+  if (!notesInput) return;
+  const note = notesInput.value.trim();
+  if (!note) return;
+  await sb('historial', 'POST', {
+    correo_id: id,
+    accion: 'nota',
+    detalle: note,
+    fecha: new Date().toISOString()
+  });
+  showToast('Nota guardada', 'success');
+}
+
+// ============================================================
+// SYNC
+// ============================================================
+async function syncData() {
+  await loadMyEmails();
+  const now = new Date();
+  const lastSyncLbl = document.getElementById('lastSyncLbl');
+  if (lastSyncLbl) lastSyncLbl.textContent = `Sync: ${now.toLocaleTimeString('es-CO')}`;
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function formatDate(d) {
+  const now = new Date();
+  const diff = now - d;
+  if (diff < 60000) return 'ahora';
+  if (diff < 3600000) return Math.floor(diff/60000) + 'm';
+  if (diff < 86400000) return Math.floor(diff/3600000) + 'h';
+  if (diff < 604800000) return Math.floor(diff/86400000) + 'd';
+  return d.toLocaleDateString('es-CO');
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg, type='info') {
+  const icons = { success:'✅', error:'❌', info:'ℹ️' };
+  const tc = document.getElementById('toastContainer');
+  if (!tc) return;
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
+  tc.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+(function init() {
+  const saved = sessionStorage.getItem('pqr_agent');
+  if (saved) {
+    try {
+      state.agent = JSON.parse(saved);
+      showApp();
+    } catch { sessionStorage.removeItem('pqr_agent'); }
+  }
+})();
+
+document.addEventListener('keydown', e => {
+  const loginScreen = document.getElementById('loginScreen');
+  if (!loginScreen) return;
+  const style = window.getComputedStyle(loginScreen);
+  if (style.display === 'none' || style.display === '') return;
+  
+  if (e.key >= '0' && e.key <= '9') addPin(e.key);
+  if (e.key === 'Backspace') clearPin();
+  if (e.key === 'Enter') doLogin();
+});
+</script>
+</body>
+</html>
