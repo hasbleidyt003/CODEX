@@ -1,1 +1,44 @@
+name: 🚀 Desplegar PQR System con Secretos
 
+on:
+  push:
+    branches: [main, master]  # Se activa cuando haces push a main o master
+
+jobs:
+  deploy:
+    name: 📦 Desplegar a GitHub Pages
+    runs-on: ubuntu-latest
+    environment: produccion  # ← Usa el entorno donde guardaste los secrets
+    
+    steps:
+      - name: 📥 Clonar repositorio
+        uses: actions/checkout@v3
+      
+      - name: 🔐 Inyectar secretos de Azure en config.js
+        run: |
+          echo "🔧 Generando config.js desde plantilla..."
+          cp config.template.js config.js
+          
+          # Reemplazar placeholders con secrets reales
+          sed -i "s|__AZURE_TENANT_ID__|${{ secrets.AZURE_TENANT_ID }}|g" config.js
+          sed -i "s|__AZURE_CLIENT_ID__|${{ secrets.AZURE_CLIENT_ID }}|g" config.js
+          sed -i "s|__AZURE_CLIENT_SECRET__|${{ secrets.AZURE_CLIENT_SECRET }}|g" config.js
+          sed -i "s|__AZURE_TOKEN_URL__|${{ secrets.AZURE_TOKEN_URL }}|g" config.js
+          sed -i "s|__AZURE_AUTH_URL__|${{ secrets.AZURE_AUTH_URL }}|g" config.js
+          
+          echo "✅ Archivo config.js generado correctamente"
+          
+          # Verificar que se reemplazaron (opcional, no muestra los valores reales)
+          echo "📋 Verificando placeholders reemplazados..."
+          grep -q "__AZURE" config.js && echo "⚠️  Advertencia: Quedaron placeholders sin reemplazar" || echo "✅ Todos los placeholders fueron reemplazados"
+      
+      - name: 📤 Desplegar a GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          keep_files: false
+          publish_branch: gh-pages  # Rama donde se desplegará el sitio
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: '🚀 Deploy: Actualización automática con secrets'
