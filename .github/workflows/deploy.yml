@@ -21,6 +21,8 @@ jobs:
           sed -i "s|__AZURE_CLIENT_SECRET__|${{ secrets.AZURE_CLIENT_SECRET }}|g" config.js
           sed -i "s|__AZURE_TOKEN_URL__|${{ secrets.AZURE_TOKEN_URL }}|g" config.js
           sed -i "s|__AZURE_AUTH_URL__|${{ secrets.AZURE_AUTH_URL }}|g" config.js
+          sed -i "s|__SUPABASE_KEY__|${{ secrets.SUPABASE_KEY }}|g" config.js
+          sed -i "s|__SUPABASE_UR__|${{ secrets.SUPABASE_UR }}|g" config.js
       
       - name: Desplegar a GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
