@@ -1,0 +1,29 @@
+name: Desplegar PQR System con Secretos
+
+on:
+  push:
+    branches: [agente.html]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: produccion
+    
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+      
+      - name: Inyectar secretos en config.js
+        run: |
+          cp config.template.js config.js
+          sed -i "s|__AZURE_TENANT_ID__|${{ secrets.AZURE_TENANT_ID }}|g" config.js
+          sed -i "s|__AZURE_CLIENT_ID__|${{ secrets.AZURE_CLIENT_ID }}|g" config.js
+          sed -i "s|__AZURE_CLIENT_SECRET__|${{ secrets.AZURE_CLIENT_SECRET }}|g" config.js
+          sed -i "s|__AZURE_TOKEN_URL__|${{ secrets.AZURE_TOKEN_URL }}|g" config.js
+          sed -i "s|__AZURE_AUTH_URL__|${{ secrets.AZURE_AUTH_URL }}|g" config.js
+      
+      - name: Desplegar a GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
