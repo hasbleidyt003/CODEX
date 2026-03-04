@@ -3,1067 +3,700 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tododrogas — PQR Agente</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<!-- Configuración inyectada por GitHub Actions (mismas variables que admin) -->
+<title>PQR Agente · Tododrogas</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="config.js"></script>
 <style>
 :root {
-  --blue-900: #003380;
-  --blue-800: #004499;
-  --blue-700: #0055bb;
-  --blue:     #0066cc;
-  --blue-500: #1a7dd4;
-  --blue-400: #3d94e0;
-  --blue-300: #7ab8ed;
-  --blue-100: #ddeeff;
-  --blue-50:  #eef6ff;
-
-  --green:    #16a34a;
-  --green-bg: #dcfce7;
-  --yellow:   #d97706;
-  --yellow-bg:#fef3c7;
-  --red:      #dc2626;
-  --red-bg:   #fee2e2;
-  --orange:   #ea580c;
-  --orange-bg:#ffedd5;
-
-  --bg:       #f0f4f8;
-  --bg2:      #e4eaf2;
-  --white:    #ffffff;
+  --ink:      #0a0e1a;
+  --ink2:     #3a4258;
+  --ink3:     #8892a4;
+  --bg:       #f2f4f8;
+  --bg2:      #e8ebf2;
   --surface:  #ffffff;
-  --surface2: #f5f8fc;
-  --surface3: #eaf0f8;
-  --border:   #d0dcec;
-  --border2:  #b8ccdf;
-  --text:     #0f1923;
-  --text2:    #3d5166;
-  --text3:    #8aa0b8;
-  --shadow:   rgba(0,68,153,0.10);
-  --shadow2:  rgba(0,68,153,0.18);
+  --surface2: #f7f8fb;
+  --border:   #dde1eb;
+  --blue:     #2563eb;
+  --blue-d:   #1d4ed8;
+  --blue-l:   #eff4ff;
+  --blue-m:   #bfdbfe;
+  --green:    #16a34a;
+  --green-l:  #dcfce7;
+  --yellow:   #ca8a04;
+  --yellow-l: #fef9c3;
+  --red:      #dc2626;
+  --red-l:    #fee2e2;
+  --orange:   #ea580c;
+  --orange-l: #fff7ed;
+  --shadow:   0 1px 3px rgba(10,14,26,.08),0 4px 12px rgba(10,14,26,.04);
+  --shadow-l: 0 2px 8px rgba(10,14,26,.12),0 8px 24px rgba(10,14,26,.08);
+  --r:        12px;
+  --r2:       8px;
 }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh}
 
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Poppins', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+/* ── LOGIN ── */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0e1a 0%,#1e2d4a 50%,#0f1d36 100%);padding:24px}
+.login-card{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:40px;width:400px;max-width:100%;box-shadow:0 24px 64px rgba(0,0,0,.4)}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-logomark{width:56px;height:56px;border-radius:16px;background:var(--blue);display:inline-flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;margin-bottom:12px;box-shadow:0 8px 24px rgba(37,99,235,.4)}
+.login-brand{font-size:22px;font-weight:700;color:#fff;letter-spacing:-.5px}
+.login-brand span{color:var(--blue-m)}
+.login-caption{font-size:12px;color:#64748b;margin-top:4px}
+.login-field{margin-bottom:20px}
+.login-label{display:block;font-size:12px;font-weight:600;color:#94a3b8;margin-bottom:8px;letter-spacing:.3px}
+.login-input{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:var(--r2);padding:12px 16px;font-size:14px;font-family:'DM Sans',sans-serif;color:#fff;outline:none;transition:all .2s}
+.login-input::placeholder{color:#475569}
+.login-input:focus{border-color:var(--blue);background:rgba(37,99,235,.1);box-shadow:0 0 0 4px rgba(37,99,235,.15)}
+.pin-input{text-align:center;letter-spacing:16px;font-size:26px;font-family:'DM Mono',monospace;padding:14px}
+.login-btn{width:100%;padding:14px;background:var(--blue);border:none;border-radius:var(--r2);color:#fff;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;margin-top:8px}
+.login-btn:hover{background:var(--blue-d);transform:translateY(-1px);box-shadow:0 8px 24px rgba(37,99,235,.4)}
+.login-btn:active{transform:none}
+.login-error{font-size:12px;color:#f87171;text-align:center;margin-top:12px;min-height:18px;font-weight:600}
 
-/* Subtle background pattern */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background:
-    radial-gradient(ellipse 70% 60% at 10% 0%, rgba(0,102,204,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 100%, rgba(0,68,153,0.05) 0%, transparent 50%);
-  pointer-events: none; z-index: 0;
-}
+/* ── APP (oculto hasta login) ── */
+#app{display:none;flex-direction:column;min-height:100vh}
 
-/* ── LOGIN ─────────────────────────────────────────────── */
-.login-screen {
-  position: fixed; inset: 0; z-index: 999;
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
-  background: linear-gradient(135deg, #f0f4f8 0%, #e4eaf2 100%);
-}
-.login-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 48px 44px;
-  width: 100%; max-width: 400px;
-  box-shadow: 0 20px 60px var(--shadow2), 0 4px 16px var(--shadow);
-  animation: cardIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
-  position: relative; overflow: hidden;
-}
-.login-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 4px;
-  background: linear-gradient(90deg, var(--blue-800), var(--blue-500));
-}
-@keyframes cardIn {
-  from { opacity:0; transform:translateY(28px) scale(0.97); }
-  to   { opacity:1; transform:translateY(0)    scale(1); }
-}
-.login-logo {
-  display: flex; flex-direction: column; align-items: center;
-  margin-bottom: 36px; gap: 12px;
-}
-.login-logomark {
-  width: 60px; height: 60px;
-  background: linear-gradient(135deg, var(--blue-800), var(--blue-500));
-  border-radius: 16px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px; font-weight: 900; color: #fff;
-  box-shadow: 0 8px 28px rgba(0,68,153,0.3);
-  letter-spacing: -1px;
-}
-.login-brand { font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; }
-.login-brand span { color: var(--blue); }
-.login-caption { font-size: 12px; color: var(--text3); font-weight: 500; letter-spacing: 0.3px; }
+/* ── TOPBAR ── */
+.topbar{background:var(--ink);color:#fff;height:56px;display:flex;align-items:center;padding:0 20px;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.topbar-logo{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+.topbar-dot{width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 8px var(--blue)}
+.topbar-agent{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:5px 12px;font-size:12px;color:#94a3b8;display:flex;align-items:center;gap:6px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.btn-logout{background:none;border:1.5px solid #334155;color:#64748b;padding:5px 12px;border-radius:7px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s}
+.btn-logout:hover{border-color:#ef4444;color:#ef4444}
+.last-sync{font-size:10px;color:#475569;font-family:'DM Mono',monospace}
 
-.login-field { margin-bottom: 20px; }
-.login-label {
-  display: block; font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 8px;
-}
-.login-input {
-  width: 100%; padding: 12px 16px;
-  background: var(--surface2); border: 1.5px solid var(--border);
-  border-radius: 12px; color: var(--text);
-  font-family: 'Poppins', sans-serif; font-size: 14px; outline: none;
-  transition: all 0.2s;
-}
-.login-input:focus {
-  border-color: var(--blue);
-  background: var(--white);
-  box-shadow: 0 0 0 4px rgba(0,102,204,0.12);
-}
-.login-input::placeholder { color: var(--text3); }
-.pin-input {
-  width: 100%; padding: 12px 16px;
-  background: var(--surface2); border: 1.5px solid var(--border);
-  border-radius: 12px; color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 26px; font-weight: 600; letter-spacing: 14px; text-align: center;
-  outline: none; transition: all 0.2s; -webkit-text-security: disc;
-}
-.pin-input:focus { border-color: var(--blue); background: var(--white); box-shadow: 0 0 0 4px rgba(0,102,204,0.12); }
-.pin-hint { font-size: 11px; color: var(--text3); margin-top: 6px; text-align: center; }
+/* ── LAYOUT ── */
+.layout{display:flex;flex:1;min-height:0}
+.sidebar{width:300px;min-width:300px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;height:calc(100vh - 56px);position:sticky;top:56px}
+.main{flex:1;overflow-y:auto;padding:24px}
 
-.login-btn {
-  width: 100%; margin-top: 8px; padding: 14px;
-  background: linear-gradient(135deg, var(--blue-800), var(--blue));
-  color: #fff; border: none; border-radius: 12px;
-  font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700;
-  cursor: pointer; letter-spacing: 0.3px;
-  transition: all 0.25s; box-shadow: 0 6px 20px rgba(0,68,153,0.3);
-}
-.login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,68,153,0.4); }
-.login-btn:active { transform: translateY(0); }
-.login-error { font-size: 12px; color: var(--red); text-align: center; margin-top: 12px; min-height: 18px; font-weight: 600; }
+/* ── SIDEBAR ── */
+.sidebar-top{padding:14px;border-bottom:1px solid var(--border)}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.search-wrap{position:relative}
+.search-wrap input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);padding:8px 12px 8px 32px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color .15s}
+.search-wrap input:focus{border-color:var(--blue);background:#fff}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ink3)}
+.tabs-mini{display:flex;gap:4px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.tab-mini{flex:1;text-align:center;padding:6px 4px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;color:var(--ink3);transition:all .15s;position:relative}
+.tab-mini:hover{background:var(--bg)}
+.tab-mini.active{background:var(--blue-l);color:var(--blue)}
+.tab-mini .cnt{position:absolute;top:-4px;right:-2px;background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:99px;font-family:'DM Mono',monospace}
+.tab-mini.active .cnt{background:var(--blue-d)}
+.email-list{flex:1;overflow-y:auto}
+.email-list::-webkit-scrollbar{width:3px}
+.email-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+.email-item{padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;position:relative}
+.email-item:hover{background:var(--bg)}
+.email-item.selected{background:var(--blue-l);border-left:3px solid var(--blue)}
+.email-item.unread{background:#fafcff}
+.unread-pip{position:absolute;left:5px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:var(--blue)}
+.e-from{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.e-subj{font-size:11px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.e-prev{font-size:10px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.e-foot{display:flex;align-items:center;justify-content:space-between;margin-top:5px}
+.e-time{font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)}
+.badge{display:inline-flex;align-items:center;font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px}
+.badge.pendiente{background:var(--yellow-l);color:var(--yellow)}
+.badge.gestion{background:var(--blue-l);color:var(--blue)}
+.badge.gestionado{background:var(--orange-l);color:var(--orange)}
+.badge.solucionado{background:var(--green-l);color:var(--green)}
+.empty-state{padding:40px 20px;text-align:center;color:var(--ink3)}
+.empty-state .ei{font-size:32px;margin-bottom:10px}
 
-/* ── HEADER ────────────────────────────────────────────── */
-.header {
-  position: sticky; top: 0; z-index: 200;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid var(--border);
-  height: 64px; display: flex; align-items: center; padding: 0 28px; gap: 14px;
-  box-shadow: 0 2px 16px var(--shadow);
-}
-.logo-wrap { display: flex; align-items: center; gap: 10px; }
-.logo-mark-sm {
-  width: 34px; height: 34px;
-  background: linear-gradient(135deg, var(--blue-800), var(--blue));
-  border-radius: 9px; display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 900; color: #fff;
-  box-shadow: 0 3px 10px rgba(0,68,153,0.25);
-}
-.logo-text-sm { font-size: 15px; font-weight: 800; letter-spacing: -0.3px; color: var(--text); }
-.logo-text-sm span { color: var(--blue); }
-.header-sep { flex: 1; }
-.status-pill {
-  display: flex; align-items: center; gap: 6px; padding: 0 12px; height: 30px;
-  border-radius: 20px; background: var(--surface2); border: 1px solid var(--border);
-  font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: var(--text2);
-}
-.sdot {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--green);
-  box-shadow: 0 0 6px var(--green); animation: blink 2.5s ease infinite;
-}
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
-.agent-chip {
-  display: flex; align-items: center; gap: 8px;
-  padding: 4px 12px 4px 4px;
-  background: var(--blue-50); border: 1px solid var(--blue-100);
-  border-radius: 24px;
-}
-.agent-av-sm {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--blue-800), var(--blue-400));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 800; color: #fff;
-}
-.agent-name-sm { font-size: 12px; font-weight: 700; color: var(--blue-800); }
+/* ── MAIN ── */
+.welcome-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px;display:flex;align-items:center;gap:16px}
+.welcome-av{width:44px;height:44px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
+.welcome-name{font-size:16px;font-weight:700;color:var(--ink)}
+.welcome-sub{font-size:12px;color:var(--ink3);margin-top:2px}
+.mini-stats{display:flex;gap:16px;margin-left:auto}
+.mini-stat{text-align:center}
+.mini-stat-val{font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--ink)}
+.mini-stat-lbl{font-size:10px;color:var(--ink3);font-weight:600}
 
-.btn-hdr {
-  display: flex; align-items: center; gap: 5px; padding: 0 12px; height: 32px;
-  border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600;
-  cursor: pointer; transition: all 0.15s;
-  border: 1.5px solid var(--border); background: var(--white); color: var(--text2);
-}
-.btn-hdr:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-50); }
-.btn-hdr.danger:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+/* ── DETAIL ── */
+.detail-placeholder{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:80px 40px;text-align:center;color:var(--ink3)}
+.detail-placeholder .di{font-size:48px;margin-bottom:16px}
+.detail-placeholder p{font-size:14px}
 
-/* ── MAIN ───────────────────────────────────────────────── */
-.main-app {
-  position: relative; z-index: 1; padding: 28px;
-  max-width: 1600px; margin: 0 auto;
-  display: flex; flex-direction: column; gap: 24px;
-}
+.detail-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.detail-header{padding:20px;border-bottom:1px solid var(--border)}
+.detail-subject{font-size:18px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:12px}
+.detail-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.meta-chip{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--ink2)}
+.detail-actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r2);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-d)}
+.btn-ghost{background:transparent;color:var(--ink2);border:1.5px solid var(--border)}
+.btn-ghost:hover{background:var(--bg)}
+.btn-success{background:var(--green-l);color:var(--green)}
+.btn-success:hover{background:#bbf7d0}
+.btn-warning{background:var(--yellow-l);color:var(--yellow)}
+.btn-warning:hover{background:#fef08a}
+.detail-body-wrap{padding:20px;border-bottom:1px solid var(--border)}
+.email-content{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:20px;font-size:14px;line-height:1.75;color:var(--ink)}
+.email-content.html-mode{padding:0;overflow:hidden}
+.email-content.html-mode iframe{width:100%;min-height:350px;border:none;border-radius:var(--r)}
 
-/* ── STATS ──────────────────────────────────────────────── */
-.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
-.stat-card {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 16px; padding: 22px 24px;
-  transition: all 0.25s; cursor: default;
-  position: relative; overflow: hidden;
-  box-shadow: 0 2px 12px var(--shadow);
-}
-.stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px var(--shadow2); }
-.stat-card::before {
-  content: ''; position: absolute; bottom: 0; right: 0;
-  width: 70px; height: 70px; border-radius: 50%;
-  opacity: 0.08; transform: translate(20px,20px);
-}
-.stat-card.s1::before { background: var(--blue); }
-.stat-card.s2::before { background: var(--blue-400); }
-.stat-card.s3::before { background: var(--yellow); }
-.stat-card.s4::before { background: var(--green); }
-.stat-icon { font-size: 18px; margin-bottom: 10px; }
-.stat-val {
-  font-size: 42px; font-weight: 900; line-height: 1;
-  font-family: 'JetBrains Mono', monospace;
-}
-.stat-card.s1 .stat-val { color: var(--blue); }
-.stat-card.s2 .stat-val { color: var(--blue-400); }
-.stat-card.s3 .stat-val { color: var(--yellow); }
-.stat-card.s4 .stat-val { color: var(--green); }
-.stat-lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); margin-top: 6px; }
+/* ── ADJUNTOS ── */
+.adj-section{padding:16px 20px;border-bottom:1px solid var(--border)}
+.adj-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+.adj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:8px}
+.adj-img-card{border-radius:var(--r2);overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:all .2s;background:#fff}
+.adj-img-card:hover{transform:scale(1.03);box-shadow:var(--shadow-l)}
+.adj-img-card img{width:100%;height:100px;object-fit:cover;display:block}
+.adj-img-label{padding:4px 8px;font-size:10px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adj-pdf-wrap{margin-bottom:8px;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.adj-pdf-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg2)}
+.adj-pdf-name{font-size:12px;font-weight:600;color:var(--ink2)}
+.adj-pdf-frame{width:100%;height:280px;border:none}
+.adj-files{display:flex;flex-wrap:wrap;gap:6px}
+.adj-pill{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid var(--border);border-radius:var(--r2);padding:5px 10px;font-size:12px;font-weight:500;color:var(--ink2);text-decoration:none;transition:all .15s;cursor:pointer}
+.adj-pill:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-l)}
 
-/* ── COLS ───────────────────────────────────────────────── */
-.cols-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-.panel {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
-  min-height: 420px; box-shadow: 0 2px 12px var(--shadow);
-}
-.panel-header {
-  padding: 16px 20px; border-bottom: 1.5px solid var(--border2);
-  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
-  background: var(--surface2);
-}
-.panel-title {
-  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-  color: var(--text2); display: flex; align-items: center; gap: 8px;
-}
-.panel-dot { width: 8px; height: 8px; border-radius: 50%; }
-.cnt-badge {
-  min-width: 24px; height: 24px; border-radius: 12px; padding: 0 7px;
-  background: var(--blue-100); color: var(--blue-800);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 800; border: 1px solid var(--blue-300);
-}
+/* ── REPLY ── */
+.reply-section{padding:16px 20px;border-bottom:1px solid var(--border)}
+.reply-wrap{display:none}
+.reply-to{font-size:11px;color:var(--ink3);margin-bottom:8px}
+.reply-textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);padding:12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);resize:vertical;min-height:100px;outline:none;transition:border-color .15s}
+.reply-textarea:focus{border-color:var(--blue);background:#fff}
+.reply-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
 
-/* ── EMAIL LIST ─────────────────────────────────────────── */
-.email-list { flex: 1; overflow-y: auto; }
-.email-list::-webkit-scrollbar { width: 4px; }
-.email-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+/* ── HISTORIAL ── */
+.hist-section{padding:16px 20px}
+.hist-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+.hist-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.hist-row:last-child{border-bottom:none}
+.hist-dot{width:7px;height:7px;border-radius:50%;background:var(--blue);margin-top:5px;flex-shrink:0}
+.hist-time{font-size:10px;color:var(--ink3);font-family:'DM Mono',monospace;min-width:50px;flex-shrink:0}
+.hist-info .hist-label{font-size:12px;font-weight:600;color:var(--ink)}
+.hist-info .hist-detail{font-size:11px;color:var(--ink3)}
 
-.email-item {
-  padding: 14px 18px; border-bottom: 1px solid var(--border);
-  cursor: pointer; transition: background 0.12s; position: relative;
-}
-.email-item:hover { background: var(--blue-50); }
-.email-item.active {
-  background: var(--blue-50); border-left: 3px solid var(--blue);
-  padding-left: 15px;
-}
-.email-item.unread { background: #f7faff; }
-.unread-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--blue); }
-.email-from { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-.email-subj { font-size: 12px; color: var(--text2); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.email-prev { font-size: 11px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.email-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
-.email-time { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--text3); }
+/* ── MODAL ADJUNTO ── */
+.adj-modal{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center}
+.adj-modal.show{display:flex}
+.adj-modal-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.12);border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif}
+.adj-modal-close:hover{background:rgba(255,255,255,.22)}
 
-.badge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 20px; }
-.badge.gestion     { background: var(--blue-100); color: var(--blue-800); border: 1px solid var(--blue-300); }
-.badge.gestionado  { background: var(--yellow-bg); color: var(--yellow); border: 1px solid #fcd34d; }
-.badge.solucionado { background: var(--green-bg); color: var(--green); border: 1px solid #86efac; }
+/* ── TOASTS ── */
+#toasts{position:fixed;bottom:20px;right:20px;z-index:600;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:var(--shadow-l);animation:toastIn .25s ease;display:flex;align-items:center;gap:8px}
+.toast.success{background:var(--green);color:#fff}
+.toast.error{background:var(--red);color:#fff}
+.toast.info{background:var(--ink);color:#fff}
+@keyframes toastIn{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 52px 20px; color: var(--text3); gap: 10px; }
-.empty-state svg { opacity: .25; }
-.empty-state p { font-size: 13px; font-weight: 500; }
-
-/* ── DETAIL OVERLAY ─────────────────────────────────────── */
-.detail-overlay {
-  position: fixed; inset: 0; z-index: 150;
-  background: rgba(15,25,35,0.4); backdrop-filter: blur(6px);
-  display: none; align-items: flex-end;
-}
-.detail-overlay.show { display: flex; }
-.detail-sheet {
-  width: 100%; max-width: 820px; margin: 0 auto;
-  background: var(--white); border-radius: 24px 24px 0 0;
-  border: 1px solid var(--border); border-bottom: none;
-  max-height: 94vh; overflow: hidden; display: flex; flex-direction: column;
-  box-shadow: 0 -20px 60px rgba(0,68,153,0.15);
-  animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
-}
-@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-.drag-handle {
-  width: 40px; height: 4px; border-radius: 2px;
-  background: var(--border2); margin: 14px auto; flex-shrink: 0;
-}
-.detail-top {
-  padding: 0 28px 18px; border-bottom: 1px solid var(--border); flex-shrink: 0;
-}
-.detail-subject { font-size: 18px; font-weight: 800; line-height: 1.35; margin-bottom: 12px; color: var(--text); }
-.detail-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.detail-chip {
-  display: flex; align-items: center; gap: 6px; padding: 5px 12px;
-  border-radius: 20px; background: var(--surface2); border: 1px solid var(--border);
-  font-size: 11px; color: var(--text2); font-weight: 500;
-}
-.actions-row {
-  padding: 12px 28px; border-bottom: 1px solid var(--border);
-  display: flex; gap: 8px; flex-wrap: wrap; align-items: center; flex-shrink: 0;
-  background: var(--surface2);
-}
-.body-area { flex: 1; overflow-y: auto; padding: 24px 28px; }
-.body-area::-webkit-scrollbar { width: 4px; }
-.body-area::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-.html-wrap {
-  background: #fff; color: #111;
-  padding: 22px; border-radius: 12px;
-  font-size: 14px; line-height: 1.75;
-  border: 1px solid var(--border);
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.04);
-}
-
-/* Reply box */
-.reply-box {
-  margin-top: 20px; background: var(--surface2);
-  border: 1.5px solid var(--blue-300); border-radius: 14px; overflow: hidden;
-  transition: border-color 0.2s;
-}
-.reply-box:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,102,204,0.1); }
-.reply-header {
-  padding: 10px 16px; border-bottom: 1px solid var(--border);
-  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
-  color: var(--blue-800); display: flex; align-items: center; justify-content: space-between;
-  background: var(--blue-50);
-}
-.reply-to { font-size: 11px; color: var(--text2); font-weight: 400; }
-.reply-textarea {
-  width: 100%; min-height: 120px; resize: vertical;
-  background: transparent; border: none; padding: 14px 16px;
-  color: var(--text); font-family: 'Poppins', sans-serif; font-size: 13px; outline: none; line-height: 1.6;
-}
-.reply-textarea::placeholder { color: var(--text3); }
-.reply-footer {
-  padding: 10px 16px; border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  background: var(--surface2);
-}
-.reply-hint { font-size: 11px; color: var(--text3); }
-.send-btn {
-  display: flex; align-items: center; gap: 7px; padding: 9px 20px; border-radius: 10px;
-  background: linear-gradient(135deg, var(--blue-800), var(--blue));
-  color: #fff; border: none; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 700;
-  cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(0,68,153,0.3);
-}
-.send-btn:hover { transform: translateY(-1px); box-shadow: 0 7px 22px rgba(0,68,153,0.4); }
-.send-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-
-/* Notes */
-.notes-area {
-  width: 100%; min-height: 80px; resize: vertical;
-  background: var(--surface2); border: 1.5px solid var(--border); border-radius: 10px;
-  padding: 12px 14px; color: var(--text); font-family: 'Poppins', sans-serif; font-size: 13px; outline: none;
-  transition: all 0.2s; margin-top: 20px;
-}
-.notes-area:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,102,204,0.1); }
-.notes-area::placeholder { color: var(--text3); }
-
-/* Historial */
-.hist-section { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border); }
-.hist-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 12px; }
-.hist-item { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
-.hist-time { font-family: 'JetBrains Mono', monospace; color: var(--text3); white-space: nowrap; }
-.hist-lbl { font-weight: 700; color: var(--blue-800); }
-.hist-det { color: var(--text2); }
-
-/* Adjuntos */
-.adj-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: 10px; }
-.adj-img-card { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
-.adj-img-card:hover { transform: scale(1.02); box-shadow: 0 6px 20px var(--shadow2); }
-.adj-img-card img { width: 100%; height: 100px; object-fit: cover; display: block; }
-.adj-img-name { padding: 5px 8px; font-size: 10px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: var(--surface2); }
-.adj-file {
-  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px;
-  background: var(--blue-50); border: 1px solid var(--blue-200,#c3ddf7); color: var(--blue-800);
-  font-size: 11px; font-weight: 600; text-decoration: none; transition: all 0.15s; cursor: pointer;
-}
-.adj-file:hover { background: var(--blue-100); box-shadow: 0 2px 8px var(--shadow); }
-.pdf-viewer-wrap { width: 100%; height: 480px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); margin-top: 8px; }
-.pdf-viewer-wrap iframe { width: 100%; height: 100%; border: none; }
-
-/* Buttons */
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 9px; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; border: 1.5px solid transparent; transition: all 0.15s; white-space: nowrap; }
-.btn-sm { padding: 5px 11px; font-size: 11px; }
-.btn-primary { background: linear-gradient(135deg,var(--blue-800),var(--blue)); color: #fff; box-shadow: 0 3px 10px rgba(0,68,153,0.25); }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,68,153,0.35); }
-.btn-success { background: var(--green-bg); color: var(--green); border-color: #86efac; }
-.btn-success:hover { background: #bbf7d0; }
-.btn-warning { background: var(--yellow-bg); color: var(--yellow); border-color: #fcd34d; }
-.btn-warning:hover { background: #fde68a; }
-.btn-danger  { background: var(--red-bg); color: var(--red); border-color: #fca5a5; }
-.btn-danger:hover { background: #fecaca; }
-.btn-ghost { background: var(--white); color: var(--text2); border-color: var(--border); }
-.btn-ghost:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-50); }
-.btn-accent { background: var(--blue-50); color: var(--blue); border-color: var(--blue-300); }
-.btn-accent:hover { background: var(--blue-100); }
-
-/* Toasts */
-.toasts { position: fixed; bottom: 24px; right: 24px; z-index: 600; display: flex; flex-direction: column-reverse; gap: 8px; }
-.toast {
-  display: flex; align-items: center; gap: 10px; padding: 12px 18px;
-  border-radius: 12px; background: var(--white); border: 1.5px solid var(--border);
-  font-size: 12px; font-weight: 600; box-shadow: 0 8px 28px var(--shadow2);
-  animation: toastIn 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 320px;
-}
-@keyframes toastIn { from{opacity:0;transform:translateX(18px)} to{opacity:1;transform:translateX(0)} }
-.toast-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.toast.success .toast-dot { background: var(--green); }
-.toast.error   .toast-dot { background: var(--red); }
-.toast.info    .toast-dot { background: var(--blue); }
-.toast.success { border-color: #86efac; color: var(--green); }
-.toast.error   { border-color: #fca5a5; color: var(--red); }
-.toast.info    { border-color: var(--blue-300); color: var(--blue-800); }
-
-@media (max-width:768px) {
-  .cols-grid { grid-template-columns: 1fr; }
-  .stats-row { grid-template-columns: repeat(2,1fr); }
-  .main-app  { padding: 16px; }
-}
+@media(max-width:768px){.sidebar{width:100%;min-width:0;height:auto;position:static}.layout{flex-direction:column}.main{padding:16px}}
 </style>
 </head>
 <body>
 
 <!-- LOGIN -->
-<div class="login-screen" id="loginScreen">
-  <div class="login-card">
-    <div class="login-logo">
-      <div class="login-logomark">TD</div>
-      <div class="login-brand">Todo<span>drogas</span></div>
-      <div class="login-caption">Sistema PQR — Portal Agente</div>
+<div id="loginWrap">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="login-logomark">TD</div>
+        <div class="login-brand">Todo<span>drogas</span></div>
+        <div class="login-caption">Sistema PQR — Portal Agente</div>
+      </div>
+      <div class="login-field">
+        <label class="login-label">Nombre completo</label>
+        <input class="login-input" type="text" id="loginNombre" placeholder="Nombre Apellido" autocomplete="name" autofocus>
+      </div>
+      <div class="login-field">
+        <label class="login-label">PIN de acceso</label>
+        <input class="login-input pin-input" type="password" id="loginPin" maxlength="4" inputmode="numeric" placeholder="·  ·  ·  ·">
+        <div style="font-size:11px;color:#475569;text-align:center;margin-top:6px">4 dígitos asignados por el administrador</div>
+      </div>
+      <button class="login-btn" onclick="doLogin()">Ingresar al sistema</button>
+      <div class="login-error" id="loginError"></div>
     </div>
-    <div class="login-field">
-      <label class="login-label">Nombre completo</label>
-      <input class="login-input" type="text" id="loginNombre" placeholder="Nombre Apellido" autocomplete="name" autofocus>
-    </div>
-    <div class="login-field">
-      <label class="login-label">PIN de acceso</label>
-      <input class="pin-input" type="password" id="loginPin" maxlength="4" inputmode="numeric" placeholder="·  ·  ·  ·">
-      <div class="pin-hint">4 dígitos asignados por el administrador</div>
-    </div>
-    <button class="login-btn" onclick="doLogin()">Ingresar al sistema</button>
-    <div class="login-error" id="loginError"></div>
   </div>
 </div>
-
-<!-- HEADER -->
-<header class="header" id="appHeader" style="display:none">
-  <div class="logo-wrap">
-    <div class="logo-mark-sm">TD</div>
-    <div class="logo-text-sm">Todo<span>drogas</span></div>
-  </div>
-  <div class="header-sep"></div>
-  <div style="display:flex;align-items:center;gap:10px">
-    <div class="status-pill">
-      <div class="sdot"></div>
-      <span id="lastSyncLbl">Conectado</span>
-    </div>
-    <button class="btn-hdr" onclick="syncData()">
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
-      Actualizar
-    </button>
-    <div class="agent-chip">
-      <div class="agent-av-sm" id="agentAv">?</div>
-      <div class="agent-name-sm" id="agentNm">Agente</div>
-    </div>
-    <button class="btn-hdr danger" onclick="logout()">
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-      Salir
-    </button>
-  </div>
-</header>
 
 <!-- APP -->
-<main class="main-app" id="appMain" style="display:none">
-  <div class="stats-row">
-    <div class="stat-card s1">
-      <div class="stat-icon">📥</div>
-      <div class="stat-val" id="myTotal">—</div>
-      <div class="stat-lbl">Total asignados</div>
+<div id="app">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="topbar-dot"></div>
+      Tododrogas PQR
     </div>
-    <div class="stat-card s2">
-      <div class="stat-icon">🔄</div>
-      <div class="stat-val" id="myActive">—</div>
-      <div class="stat-lbl">En gestión</div>
+    <div class="topbar-agent" id="topbarAgent">
+      <span>👤</span><span id="topbarAgentName">—</span>
     </div>
-    <div class="stat-card s3">
-      <div class="stat-icon">📋</div>
-      <div class="stat-val" id="myManaged">—</div>
-      <div class="stat-lbl">Gestionados</div>
-    </div>
-    <div class="stat-card s4">
-      <div class="stat-icon">✅</div>
-      <div class="stat-val" id="mySolved">—</div>
-      <div class="stat-lbl">Solucionados</div>
+    <div class="topbar-right">
+      <span class="last-sync" id="lastSync">—</span>
+      <button class="btn-logout" onclick="doLogout()">Salir</button>
     </div>
   </div>
 
-  <div class="cols-grid">
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <div class="panel-dot" style="background:var(--blue);box-shadow:0 0 6px var(--blue)"></div>
-          Correos activos
-        </div>
-        <div class="cnt-badge" id="cntActive">0</div>
-      </div>
-      <div class="email-list" id="listActive">
-        <div class="empty-state">
-          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
-          <p>Cargando correos...</p>
+  <!-- LAYOUT -->
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-label">Buscar</div>
+        <div class="search-wrap">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Asunto o remitente..." oninput="renderEmails()">
         </div>
       </div>
-    </div>
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title">
-          <div class="panel-dot" style="background:var(--green);box-shadow:0 0 6px var(--green)"></div>
-          Gestionados / Solucionados
+      <div class="tabs-mini">
+        <div class="tab-mini active" id="tab-pendiente" onclick="switchTab('pendiente',this)">
+          Pendiente
+          <span class="cnt" id="cnt-pendiente">0</span>
         </div>
-        <div class="cnt-badge" id="cntClosed" style="background:var(--green-bg);color:var(--green);border-color:#86efac">0</div>
-      </div>
-      <div class="email-list" id="listClosed">
-        <div class="empty-state">
-          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
-          <p>Sin registros aún</p>
+        <div class="tab-mini" id="tab-gestion" onclick="switchTab('gestion',this)">
+          Gestión
+          <span class="cnt" id="cnt-gestion">0</span>
+        </div>
+        <div class="tab-mini" id="tab-solucionado" onclick="switchTab('solucionado',this)">
+          Resuelto
+          <span class="cnt" id="cnt-solucionado">0</span>
         </div>
       </div>
-    </div>
-  </div>
-</main>
+      <div class="email-list" id="emailsList">
+        <div class="empty-state"><div class="ei">📬</div><p>Cargando...</p></div>
+      </div>
+    </aside>
 
-<!-- DETAIL -->
-<div class="detail-overlay" id="detailOverlay">
-  <div class="detail-sheet" id="detailSheet">
-    <div class="drag-handle"></div>
-    <div class="detail-top">
-      <div class="detail-subject" id="dSubject">—</div>
-      <div class="detail-chips" id="dChips"></div>
-    </div>
-    <div class="actions-row" id="dActions"></div>
-    <div class="body-area" id="bodyArea">
-      <div id="dBody"></div>
-      <div id="dAdjuntos"></div>
-      <div class="reply-box" id="replyBox" style="display:none">
-        <div class="reply-header">
-          <span>✉ Responder correo</span>
-          <span class="reply-to" id="replyTo"></span>
+    <!-- MAIN -->
+    <main class="main">
+      <!-- Welcome bar -->
+      <div class="welcome-bar" id="welcomeBar">
+        <div class="welcome-av" id="welcomeAv">?</div>
+        <div>
+          <div class="welcome-name" id="welcomeName">—</div>
+          <div class="welcome-sub">Portal de gestión PQR · td-pruebas.online</div>
         </div>
-        <textarea class="reply-textarea" id="replyText" placeholder="Escribe tu respuesta aquí..."></textarea>
-        <div class="reply-footer">
-          <span class="reply-hint">📤 Enviará desde pqrs.institucional@tododrogas.com.co</span>
-          <button class="send-btn" id="sendBtn" onclick="sendReply()">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Enviar respuesta
-          </button>
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <div class="mini-stat-val" id="myPending">0</div>
+            <div class="mini-stat-lbl">Pendiente</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val" id="myActive">0</div>
+            <div class="mini-stat-lbl">En gestión</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val" id="mySolved">0</div>
+            <div class="mini-stat-lbl">Resueltos</div>
+          </div>
         </div>
       </div>
-      <textarea class="notes-area" id="notesInput" placeholder="Agrega notas o comentarios internos sobre esta PQR..."></textarea>
-      <div style="margin-top:10px">
-        <button class="btn btn-accent btn-sm" onclick="saveNote()">Guardar nota</button>
+
+      <!-- Detail -->
+      <div id="detailWrap">
+        <div class="detail-placeholder">
+          <div class="di">✉️</div>
+          <p>Selecciona un correo de la lista para verlo aquí</p>
+        </div>
       </div>
-      <div id="dHist"></div>
-    </div>
+    </main>
   </div>
 </div>
 
-<div class="toasts" id="toasts"></div>
+<!-- MODAL ADJUNTO FULLSCREEN -->
+<div class="adj-modal" id="adjModal">
+  <button class="adj-modal-close" onclick="closeAdjModal()">✕ Cerrar</button>
+  <div id="adjModalContent"></div>
+</div>
+
+<!-- TOASTS -->
+<div id="toasts"></div>
 
 <script>
-// Variables de configuración (inyectadas por config.js - Mismas que en admin)
-const SUPABASE_URL = window.CONFIG?.SUPABASE_URL;
-const SUPABASE_KEY = window.CONFIG?.SUPABASE_KEY;
-const GRAPH_TENANT = window.CONFIG?.AZURE_TENANT_ID;
-const GRAPH_CLIENT_ID = window.CONFIG?.AZURE_CLIENT_ID;
-const GRAPH_SECRET = window.CONFIG?.AZURE_SECRET;
-const GRAPH_USER_ID = window.CONFIG?.AZURE_USER_ID;
+// ─── CONFIG ──────────────────────────────────────────────────
+const SUPABASE_URL = (window.CONFIG||{}).SUPABASE_URL;
+const SUPABASE_KEY = (window.CONFIG||{}).SUPABASE_KEY;
+const GRAPH_TENANT    = (window.CONFIG||{}).GRAPH_TENANT;
+const GRAPH_CLIENT_ID = (window.CONFIG||{}).GRAPH_CLIENT_ID;
+const GRAPH_SECRET    = (window.CONFIG||{}).GRAPH_SECRET;
+const GRAPH_USER_ID   = (window.CONFIG||{}).GRAPH_USER_ID;
 
-// Validación de configuración al inicio
-if (!SUPABASE_URL || !SUPABASE_KEY || !GRAPH_TENANT || !GRAPH_CLIENT_ID || !GRAPH_SECRET || !GRAPH_USER_ID) {
-    console.error("Error: Faltan variables de configuración. Verifica config.js");
-    showToast("Error de configuración. Contacta al administrador.", "error");
+// ─── MAPEO campos n8n → UI ───────────────────────────────────
+function mapCorreo(c) {
+  return {
+    id:              c.id,
+    message_id:      c.message_id,
+    asunto:          c.subject      || c.asunto      || '(Sin asunto)',
+    remitente:       c.from_email   || c.remitente   || '',
+    remitente_nombre:c.from_name    || c.remitente_nombre || '',
+    fecha:           c.received_at  || c.fecha        || c.created_at,
+    cuerpo_html:     c.body_content || c.cuerpo_html  || '',
+    cuerpo_tipo:     c.body_type    || c.cuerpo_tipo  || 'text',
+    tiene_adjuntos:  c.has_attachments ?? c.tiene_adjuntos ?? false,
+    leido:           c.is_read      ?? c.leido        ?? false,
+    preview:         c.body_preview || c.preview      || '',
+    estado:          c.estado       || 'pendiente',
+    asignado_a:      c.asignado_a,
+    _raw: c,
+  };
 }
 
-async function getGraphToken() {
-  try {
-    const r = await fetch(`https://login.microsoftonline.com/${GRAPH_TENANT}/oauth2/v2.0/token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        grant_type: 'client_credentials',
-        client_id: GRAPH_CLIENT_ID,
-        client_secret: GRAPH_SECRET,
-        scope: 'https://graph.microsoft.com/.default'
-      })
-    });
-    if (!r.ok) throw new Error(`Error obteniendo token: ${r.status}`);
-    const data = await r.json();
-    return data.access_token;
-  } catch (error) {
-    console.error('Error en getGraphToken:', error);
-    showToast('Error de autenticación con Outlook', 'error');
-    throw error;
-  }
-}
+// ─── STATE ───────────────────────────────────────────────────
+const state = { emails:[], currentAgent:null, currentTab:'pendiente', selectedId:null };
 
-async function sendReply() {
-  const id = state.selectedId;
-  const email = state.emails.find(e => e.id === id);
-  if (!email) return;
-  const body = document.getElementById('replyText').value.trim();
-  if (!body) { showToast('Escribe el mensaje antes de enviar', 'error'); return; }
-  const btn = document.getElementById('sendBtn');
-  btn.disabled = true;
-  btn.textContent = 'Enviando...';
-  
-  let exitoso = false;
-  let errMsg = null;
-  
-  try {
-    const token = await getGraphToken();
-    const r = await fetch(`https://graph.microsoft.com/v1.0/users/${GRAPH_USER_ID}/sendMail`, {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: {
-          subject: 'RE: ' + email.asunto,
-          body: {
-            contentType: 'HTML',
-            content: `<p>${body.replace(/\n/g, '<br>')}</p>`
-          },
-          toRecipients: [{
-            emailAddress: {
-              address: email.remitente,
-              name: email.remitente_nombre || email.remitente
-            }
-          }]
-        },
-        saveToSentItems: true
-      })
-    });
-    
-    if (r.ok || r.status === 202) {
-      exitoso = true;
-      showToast('Respuesta enviada correctamente ✓', 'success');
-      document.getElementById('replyText').value = '';
-      document.getElementById('replyBox').style.display = 'none';
-    } else {
-      throw new Error(await r.text());
-    }
-  } catch (e) {
-    errMsg = e.message;
-    showToast('Error: ' + e.message.substring(0, 80), 'error');
-  }
-  
-  try {
-    await sb('respuestas', 'POST', {
-      correo_id: id,
-      agente_id: state.agent.id,
-      cuerpo: body,
-      enviado_en: new Date().toISOString(),
-      exitoso,
-      error_msg: errMsg
-    });
-    await sb('historial', 'POST', {
-      correo_id: id,
-      accion: 'respuesta_enviada',
-      detalle: `Respondido por ${state.agent.nombre}`,
-      agente_id: state.agent.id,
-      fecha: new Date().toISOString()
-    });
-  } catch {}
-  
-  btn.disabled = false;
-  btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Enviar respuesta`;
-}
-
-let state = { agent: null, emails: [], selectedId: null };
-
-async function sb(path, method = 'GET', body = null) {
+// ─── SUPABASE ────────────────────────────────────────────────
+async function sb(path, method='GET', body=null) {
   const opts = {
     method,
-    headers: {
-      'Content-Type': 'application/json',
+    headers:{
+      'Content-Type':'application/json',
       'apikey': SUPABASE_KEY,
       'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Prefer': method === 'POST' ? 'return=representation' : ''
+      'Prefer': method==='POST'?'return=representation': method==='PATCH'?'return=representation':'',
     }
   };
-  if (body) opts.body = JSON.stringify(body);
-  const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, opts);
-  if (!r.ok) {
-    const e = await r.text();
-    throw new Error(e);
-  }
-  try { return await r.json(); } catch { return null; }
+  if(body) opts.body=JSON.stringify(body);
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,opts);
+  if(!r.ok){const e=await r.text();throw new Error(e);}
+  try{return await r.json();}catch{return null;}
 }
 
+// ─── GRAPH TOKEN ─────────────────────────────────────────────
+async function getGraphToken() {
+  const r=await fetch(`https://login.microsoftonline.com/${GRAPH_TENANT}/oauth2/v2.0/token`,{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams({grant_type:'client_credentials',client_id:GRAPH_CLIENT_ID,client_secret:GRAPH_SECRET,scope:'https://graph.microsoft.com/.default'})
+  });
+  return (await r.json()).access_token;
+}
+
+// ─── LOGIN ───────────────────────────────────────────────────
 async function doLogin() {
   const nombreRaw = document.getElementById('loginNombre').value.trim();
   const pin = document.getElementById('loginPin').value.trim();
-  const err = document.getElementById('loginError');
-  err.textContent = '';
-  
-  if (!nombreRaw || pin.length !== 4) {
-    err.textContent = 'Ingresa tu nombre completo y PIN de 4 dígitos.';
-    return;
-  }
-  if (isNaN(pin)) {
-    err.textContent = 'El PIN solo debe contener números.';
-    return;
-  }
-  
+  const errEl = document.getElementById('loginError');
+  errEl.textContent='';
+  if(!nombreRaw||pin.length!==4){errEl.textContent='Ingresa tu nombre y PIN de 4 dígitos.';return;}
+  if(isNaN(pin)){errEl.textContent='El PIN solo debe contener números.';return;}
   try {
-    const agents = await sb('agentes?activo=eq.true');
-    if (!agents || !agents.length) {
-      err.textContent = 'No hay agentes registrados.';
-      return;
-    }
-    const found = agents.find(a => 
-      (a.nombre || '').toLowerCase().trim() === nombreRaw.toLowerCase() && 
-      String(a.pin) === String(pin)
+    const agents = await sb('agentes?activo=eq.true') || [];
+    const found = agents.find(a=>
+      (a.nombre||'').toLowerCase().trim()===nombreRaw.toLowerCase() &&
+      String(a.pin)===String(pin)
     );
-    if (!found) {
-      err.textContent = 'Nombre o PIN incorrecto.';
-      document.getElementById('loginPin').value = '';
-      return;
-    }
-    state.agent = found;
-    sessionStorage.setItem('pqr_agent', JSON.stringify(state.agent));
-    showApp();
-  } catch (e) {
-    err.textContent = 'Error de conexión. Intenta de nuevo.';
-  }
+    if(!found){errEl.textContent='Nombre o PIN incorrecto.';document.getElementById('loginPin').value='';return;}
+    state.currentAgent = found;
+    enterApp();
+  } catch(e){errEl.textContent='Error de conexión: '+e.message.substring(0,60);}
 }
 
-function showApp() {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('appHeader').style.display = 'flex';
-  document.getElementById('appMain').style.display = 'flex';
-  
-  const initials = (state.agent.nombre || '?')
-    .split(' ')
-    .map(w => w[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
-  document.getElementById('agentAv').textContent = initials;
-  document.getElementById('agentNm').textContent = state.agent.nombre;
-  
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter' && document.getElementById('loginWrap').style.display!=='none') doLogin();
+});
+
+function enterApp() {
+  document.getElementById('loginWrap').style.display='none';
+  document.getElementById('app').style.display='flex';
+  const a = state.currentAgent;
+  const ini = (a.nombre||'?').charAt(0).toUpperCase();
+  document.getElementById('topbarAgentName').textContent = a.nombre;
+  document.getElementById('welcomeName').textContent = `Hola, ${a.nombre}`;
+  document.getElementById('welcomeAv').textContent = ini;
   loadMyEmails();
-  setInterval(syncData, 5 * 60 * 1000);
+  setInterval(()=>loadMyEmails(), 90000);
 }
 
-function logout() {
-  sessionStorage.removeItem('pqr_agent');
-  state = { agent: null, emails: [], selectedId: null };
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('appHeader').style.display = 'none';
-  document.getElementById('appMain').style.display = 'none';
-  document.getElementById('loginNombre').value = '';
-  document.getElementById('loginPin').value = '';
-  document.getElementById('loginError').textContent = '';
+function doLogout() {
+  state.currentAgent=null;state.emails=[];state.selectedId=null;
+  document.getElementById('loginWrap').style.display='block';
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginPin').value='';
+  document.getElementById('loginNombre').value='';
 }
 
+// ─── LOAD MY EMAILS ──────────────────────────────────────────
 async function loadMyEmails() {
+  if(!state.currentAgent) return;
   try {
-    const data = await sb(`correos?asignado_a=eq.${state.agent.id}&order=fecha.desc`);
-    state.emails = data || [];
-    renderAll();
-    updateStats();
-  } catch {
-    showToast('Error al cargar correos', 'error');
-  }
+    // Correos asignados al agente logueado
+    const d = await sb(`correos?asignado_a=eq.${state.currentAgent.id}&order=received_at.desc&limit=200`) || [];
+    state.emails = d.map(mapCorreo);
+    renderEmails();
+    updateMyStats();
+    document.getElementById('lastSync').textContent=`sync ${new Date().toLocaleTimeString('es-CO')}`;
+  } catch(e){console.error('[loadMyEmails]',e);}
 }
 
-function renderAll() {
-  const active = state.emails.filter(e => e.estado === 'gestion');
-  const closed = state.emails.filter(e => ['gestionado', 'solucionado'].includes(e.estado));
-  
-  document.getElementById('cntActive').textContent = active.length;
-  document.getElementById('cntClosed').textContent = closed.length;
-  
-  renderList('listActive', active, 'Sin correos activos');
-  renderList('listClosed', closed, 'Sin registros cerrados');
+// ─── RENDER ──────────────────────────────────────────────────
+function switchTab(tab,el) {
+  state.currentTab=tab;
+  document.querySelectorAll('.tab-mini').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderEmails();
 }
 
-function renderList(cid, emails, emptyMsg) {
-  const c = document.getElementById(cid);
-  if (!emails.length) {
-    c.innerHTML = `<div class="empty-state"><svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg><p>${emptyMsg}</p></div>`;
-    return;
-  }
-  
-  c.innerHTML = emails.map(email => {
-    const timeStr = formatDate(new Date(email.fecha));
-    const statusLabel = {
-      gestion: 'En Gestión',
-      gestionado: 'Gestionado',
-      solucionado: 'Solucionado'
-    }[email.estado] || email.estado;
-    
-    return `<div class="email-item ${email.id === state.selectedId ? 'active' : ''} ${!email.leido ? 'unread' : ''}" onclick="selectEmail(${email.id})">
-      ${!email.leido ? '<div class="unread-bar"></div>' : ''}
-      <div class="email-from">${esc(email.remitente_nombre || email.remitente)}</div>
-      <div class="email-subj">${esc(email.asunto)}</div>
-      <div class="email-prev">${esc(email.preview || '')}</div>
-      <div class="email-foot">
-        <span class="badge ${email.estado}">${statusLabel}</span>
-        <div style="display:flex;align-items:center;gap:6px">
-          ${email.tiene_adjuntos ? `<svg width="12" height="12" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>` : ''}
-          <span class="email-time">${timeStr}</span>
+function renderEmails() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const allTabs = ['pendiente','gestion','gestionado','solucionado'];
+  allTabs.forEach(t=>{
+    const el=document.getElementById(`cnt-${t}`);
+    if(el) el.textContent=state.emails.filter(e=>e.estado===t).length;
+  });
+  const filtered = state.emails.filter(e=>
+    e.estado===state.currentTab &&
+    (!search||(e.asunto||'').toLowerCase().includes(search)||(e.remitente||'').toLowerCase().includes(search)||(e.remitente_nombre||'').toLowerCase().includes(search))
+  );
+  const container = document.getElementById('emailsList');
+  if(!filtered.length){container.innerHTML=`<div class="empty-state"><div class="ei">📭</div><p>Sin correos aquí</p></div>`;return;}
+  const labels={pendiente:'Pendiente',gestion:'En Gestión',gestionado:'Gestionado',solucionado:'Solucionado'};
+  container.innerHTML=filtered.map(email=>{
+    const timeStr=formatDate(new Date(email.fecha));
+    return `<div class="email-item ${email.id===state.selectedId?'selected':''} ${!email.leido?'unread':''}" onclick="selectEmail('${email.id}')">
+      ${!email.leido?'<div class="unread-pip"></div>':''}
+      <div class="e-from">${esc(email.remitente_nombre||email.remitente)}</div>
+      <div class="e-subj">${esc(email.asunto)}</div>
+      <div class="e-prev">${esc(email.preview||'')}</div>
+      <div class="e-foot">
+        <span class="badge ${email.estado}">${labels[email.estado]||email.estado}</span>
+        <div style="display:flex;align-items:center;gap:4px">
+          ${email.tiene_adjuntos?'<span>📎</span>':''}
+          <span class="e-time">${timeStr}</span>
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-function updateStats() {
-  document.getElementById('myTotal').textContent = state.emails.length;
-  document.getElementById('myActive').textContent = state.emails.filter(e => e.estado === 'gestion').length;
-  document.getElementById('myManaged').textContent = state.emails.filter(e => e.estado === 'gestionado').length;
-  document.getElementById('mySolved').textContent = state.emails.filter(e => e.estado === 'solucionado').length;
+function updateMyStats() {
+  document.getElementById('myPending').textContent = state.emails.filter(e=>e.estado==='pendiente').length;
+  document.getElementById('myActive').textContent = state.emails.filter(e=>e.estado==='gestion').length;
+  document.getElementById('mySolved').textContent = state.emails.filter(e=>e.estado==='solucionado'||e.estado==='gestionado').length;
 }
 
+// ─── SELECT EMAIL ────────────────────────────────────────────
 async function selectEmail(id) {
-  state.selectedId = id;
-  const email = state.emails.find(e => e.id === id);
-  if (!email) return;
-  renderAll();
-  
-  let hist = [];
+  state.selectedId=id;
+  const email=state.emails.find(e=>e.id===id);
+  if(!email) return;
+  renderEmails();
+
+  let hist=[];
   try {
-    hist = await sb(`historial?correo_id=eq.${id}&order=fecha.asc`) || [];
+    try { hist=await sb(`historial_eventos?correo_id=eq.${id}&order=created_at.asc`)||[]; }
+    catch { hist=await sb(`historial?correo_id=eq.${id}&order=fecha.asc`)||[]; }
   } catch {}
-  
-  const statusLabel = {
-    gestion: 'En Gestión',
-    gestionado: 'Gestionado',
-    solucionado: 'Solucionado'
-  }[email.estado] || email.estado;
-  
-  document.getElementById('dSubject').textContent = email.asunto;
-  document.getElementById('dChips').innerHTML = `
-    <div class="detail-chip"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg><strong>${esc(email.remitente_nombre || email.remitente)}</strong></div>
-    <div class="detail-chip" style="font-family:'JetBrains Mono',monospace;font-size:10px">${esc(email.remitente)}</div>
-    <div class="detail-chip"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>${new Date(email.fecha).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}</div>
-    <span class="badge ${email.estado}" style="padding:5px 12px">${statusLabel}</span>`;
-  
-  document.getElementById('dActions').innerHTML = `
-    ${email.estado === 'gestion' ? `<button class="btn btn-warning btn-sm" onclick="setStatus(${id},'gestionado')">Gestionado</button><button class="btn btn-success btn-sm" onclick="setStatus(${id},'solucionado')">Solucionado</button>` : ''}
-    ${email.estado === 'gestionado' ? `<button class="btn btn-success btn-sm" onclick="setStatus(${id},'solucionado')">Solucionado</button><button class="btn btn-ghost btn-sm" onclick="setStatus(${id},'gestion')">Reabrir</button>` : ''}
-    ${email.estado === 'solucionado' ? `<button class="btn btn-ghost btn-sm" onclick="setStatus(${id},'gestion')">Reabrir</button>` : ''}
-    <button class="btn btn-accent btn-sm" onclick="toggleReply()">
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 00-4-4H4"/></svg>Responder
-    </button>
-    <div style="flex:1"></div>
-    <button class="btn btn-ghost btn-sm" onclick="closeDetail()">Cerrar</button>`;
-  
-  const bodyContent = email.cuerpo_html || email.preview || '(Sin contenido)';
-  document.getElementById('dBody').innerHTML = email.cuerpo_tipo === 'html' ?
-    `<div class="html-wrap">${bodyContent}</div>` :
-    `<pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;color:var(--text2);padding:16px;background:var(--surface2);border-radius:10px;border:1px solid var(--border)">${esc(bodyContent)}</pre>`;
-  
-  document.getElementById('dAdjuntos').innerHTML = buildAdjuntos(email.adjuntos);
-  document.getElementById('replyBox').style.display = 'none';
-  document.getElementById('replyText').value = '';
-  document.getElementById('replyTo').textContent = `Para: ${email.remitente_nombre || email.remitente} <${email.remitente}>`;
-  
-  const existingNote = hist.filter(h => h.accion === 'nota').pop();
-  document.getElementById('notesInput').value = existingNote ? existingNote.detalle : '';
-  
-  document.getElementById('dHist').innerHTML = hist.length ?
-    `<div class="hist-section"><div class="hist-title">Historial</div>${hist.map(h => `<div class="hist-item"><span class="hist-time">${formatDate(new Date(h.fecha))}</span><span class="hist-lbl">${esc(h.accion)}</span><span class="hist-det">${esc(h.detalle || '')}</span></div>`).join('')}</div>` : '';
-  
-  document.getElementById('bodyArea').scrollTop = 0;
-  document.getElementById('detailOverlay').classList.add('show');
-  document.body.style.overflow = 'hidden';
-  
-  if (!email.leido) {
-    await sb(`correos?id=eq.${id}`, 'PATCH', { leido: true });
-    const idx = state.emails.findIndex(e => e.id === id);
-    if (idx !== -1) state.emails[idx].leido = true;
-    renderAll();
+
+  const labels={pendiente:'Pendiente',gestion:'En Gestión',gestionado:'Gestionado',solucionado:'Solucionado'};
+
+  let adjHTML = await buildAdjuntos(id, email);
+
+  const cuerpo = email.cuerpo_tipo==='html'||email.cuerpo_tipo==='HTML'
+    ? (()=>{
+        const blob=new Blob([email.cuerpo_html||''],{type:'text/html'});
+        const url=URL.createObjectURL(blob);
+        return `<div class="email-content html-mode"><iframe src="${url}" sandbox="allow-same-origin" onload="this.style.height=this.contentDocument.body.scrollHeight+40+'px'"></iframe></div>`;
+      })()
+    : `<div class="email-content"><pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;color:var(--ink2)">${esc(email.cuerpo_html||email.preview||'(Sin contenido)')}</pre></div>`;
+
+  const histHTML = hist.length ? `
+    <div class="hist-section">
+      <div class="hist-title">Historial</div>
+      ${hist.map(h=>{
+        const fecha=h.created_at||h.fecha||'';
+        const accion=h.evento||h.accion||'';
+        const detalle=h.metadata?JSON.stringify(h.metadata):(h.detalle||'');
+        return `<div class="hist-row">
+          <div class="hist-dot"></div>
+          <span class="hist-time">${fecha?formatDate(new Date(fecha)):''}</span>
+          <div class="hist-info">
+            <div class="hist-label">${esc(accion)}</div>
+            <div class="hist-detail">${esc(detalle)}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>` : '';
+
+  document.getElementById('detailWrap').innerHTML=`
+    <div class="detail-card">
+      <div class="detail-header">
+        <div class="detail-subject">${esc(email.asunto)}</div>
+        <div class="detail-meta">
+          <div class="meta-chip"><strong>${esc(email.remitente_nombre||email.remitente)}</strong> &lt;${esc(email.remitente)}&gt;</div>
+          <div class="meta-chip">${new Date(email.fecha).toLocaleString('es-CO',{dateStyle:'medium',timeStyle:'short'})}</div>
+          <span class="badge ${email.estado}" style="font-size:11px;padding:3px 10px">${labels[email.estado]}</span>
+          ${email.tiene_adjuntos?'<div class="meta-chip">📎 Con adjuntos</div>':''}
+        </div>
+        <div class="detail-actions">
+          ${email.estado==='pendiente'?`<button class="btn btn-primary" onclick="changeStatus('${id}','gestion')">Tomar en gestión</button>`:''}
+          ${email.estado==='gestion'?`<button class="btn btn-warning" onclick="changeStatus('${id}','gestionado')">Marcar gestionado</button>`:''}
+          ${(email.estado==='gestion'||email.estado==='gestionado')?`<button class="btn btn-success" onclick="changeStatus('${id}','solucionado')">✓ Solucionado</button>`:''}
+          ${(email.estado==='solucionado'||email.estado==='gestionado')?`<button class="btn btn-ghost" onclick="changeStatus('${id}','gestion')">↩ Reabrir</button>`:''}
+          <button class="btn btn-ghost" onclick="toggleReply('${id}')">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 00-4-4H4"/></svg>
+            Responder
+          </button>
+        </div>
+      </div>
+
+      <div class="detail-body-wrap">
+        ${cuerpo}
+      </div>
+
+      ${adjHTML}
+
+      <div class="reply-section">
+        <div class="reply-wrap" id="replyWrap">
+          <div class="reply-to" id="replyTo">Para: ${esc(email.remitente_nombre||email.remitente)} &lt;${esc(email.remitente)}&gt;</div>
+          <textarea class="reply-textarea" id="replyText" placeholder="Escribe tu respuesta..."></textarea>
+          <div class="reply-actions">
+            <button class="btn btn-ghost" onclick="document.getElementById('replyWrap').style.display='none'">Cancelar</button>
+            <button class="btn btn-primary" onclick="sendReply('${id}')">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Enviar
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-ghost" id="showReplyBtn" onclick="toggleReply('${id}')">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 00-4-4H4"/></svg>
+          Responder al remitente
+        </button>
+      </div>
+
+      ${histHTML}
+    </div>`;
+
+  // Marcar leído
+  if(!email.leido){
+    try{await sb(`correos?id=eq.${id}`,'PATCH',{is_read:true});const idx=state.emails.findIndex(e=>e.id===id);if(idx!==-1)state.emails[idx].leido=true;}catch{}
   }
+  document.getElementById('detailWrap').scrollTop=0;
 }
 
-function toggleReply() {
-  const rb = document.getElementById('replyBox');
-  const shown = rb.style.display !== 'none';
-  rb.style.display = shown ? 'none' : 'block';
-  if (!shown) {
-    document.getElementById('replyText').focus();
-    document.getElementById('bodyArea').scrollTop = 99999;
+// ─── ADJUNTOS ────────────────────────────────────────────────
+async function buildAdjuntos(correoId, email) {
+  let adjuntos=[];
+  try { adjuntos=await sb(`adjuntos?correo_id=eq.${correoId}`)||[]; } catch {}
+  // fallback campo adjuntos JSON
+  if(!adjuntos.length && email._raw.adjuntos){
+    try {
+      const raw=typeof email._raw.adjuntos==='string'?JSON.parse(email._raw.adjuntos):email._raw.adjuntos;
+      if(Array.isArray(raw)) adjuntos=raw.map(a=>({nombre:a.nombre||a.name,tipo_contenido:a.tipo||a.tipo_contenido||a.contentType||'',content_bytes:a.contenido_base64||a.content_bytes||null,tamaño_bytes:a.tamano||a.tamaño_bytes||0}));
+    } catch {}
   }
-}
-
-function closeDetail() {
-  document.getElementById('detailOverlay').classList.remove('show');
-  document.body.style.overflow = '';
-  state.selectedId = null;
-  renderAll();
-}
-
-function buildAdjuntos(raw) {
-  if (!raw) return '';
-  let adj;
-  try {
-    adj = typeof raw === 'string' ? JSON.parse(raw) : raw;
-  } catch {
-    return '';
-  }
-  if (!adj || !adj.length) return '';
-  
-  const images = adj.filter(a => a.contenido_base64 && (a.tipo || '').startsWith('image/'));
-  const pdfs = adj.filter(a => a.contenido_base64 && (a.tipo || '').includes('pdf'));
-  const files = adj.filter(a => !images.includes(a) && !pdfs.includes(a));
-  
-  let html = `<div style="margin-top:22px;padding:16px;background:var(--surface2);border-radius:12px;border:1px solid var(--border)"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:14px">📎 Adjuntos — ${adj.length}</div>`;
-  
-  if (images.length) {
-    html += `<div class="adj-grid" style="${(pdfs.length || files.length) ? 'margin-bottom:14px' : ''}">`;
-    images.forEach(a => {
-      const src = `data:${a.tipo};base64,${a.contenido_base64}`;
-      html += `<div class="adj-img-card" onclick="window.open().document.write('<img src=\\'${src}\\' style=\\'max-width:100%;max-height:100vh\\'>')"><img src="${src}" alt="${esc(a.nombre)}" loading="lazy"><div class="adj-img-name">${esc(a.nombre)}</div></div>`;
+  if(!adjuntos.length) return '';
+  const images=adjuntos.filter(a=>(a.tipo_contenido||'').startsWith('image/')&&a.content_bytes);
+  const pdfs=adjuntos.filter(a=>(a.tipo_contenido||'').includes('pdf')&&a.content_bytes);
+  const others=adjuntos.filter(a=>!images.includes(a)&&!pdfs.includes(a));
+  let html=`<div class="adj-section"><div class="adj-title">📎 Adjuntos (${adjuntos.length})</div>`;
+  if(images.length){
+    html+=`<div class="adj-grid">`;
+    images.forEach(a=>{
+      const src=`data:${a.tipo_contenido};base64,${a.content_bytes}`;
+      html+=`<div class="adj-img-card" onclick="openAdjModal('img','${src}','${esc(a.nombre||'')}')">
+        <img src="${src}" alt="${esc(a.nombre||'')}" loading="lazy">
+        <div class="adj-img-label">${esc(a.nombre||'Imagen')}</div>
+      </div>`;
     });
-    html += `</div>`;
+    html+=`</div>`;
   }
-  
-  if (pdfs.length) {
-    pdfs.forEach(a => {
-      const src = `data:application/pdf;base64,${a.contenido_base64}`;
-      const kb = Math.round((a.tamano || 0) / 1024);
-      html += `<div style="margin-bottom:14px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;font-weight:600;color:var(--text2)">📄 ${esc(a.nombre)} ${kb > 0 ? `(${kb} KB)` : ''}</span><a href="${src}" download="${a.nombre}" class="adj-file" style="font-size:10px;padding:4px 10px">⬇ Descargar</a></div><div class="pdf-viewer-wrap"><iframe src="${src}" title="${esc(a.nombre)}"></iframe></div></div>`;
-    });
-  }
-  
-  if (files.length) {
-    html += `<div style="display:flex;flex-wrap:wrap;gap:8px">`;
-    files.forEach(a => {
-      const kb = Math.round((a.tamano || 0) / 1024);
-      if (a.contenido_base64) {
-        html += `<a href="data:${a.tipo || 'application/octet-stream'};base64,${a.contenido_base64}" download="${a.nombre}" class="adj-file">📎 <span style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a.nombre)}</span>${kb > 0 ? `<span style="font-size:10px;opacity:0.6">${kb}KB</span>` : ''}</a>`;
+  pdfs.forEach(a=>{
+    const src=`data:application/pdf;base64,${a.content_bytes}`;
+    const kb=Math.round((a.tamaño_bytes||0)/1024);
+    html+=`<div class="adj-pdf-wrap">
+      <div class="adj-pdf-header">
+        <span class="adj-pdf-name">📄 ${esc(a.nombre||'Documento.pdf')} ${kb>0?`(${kb} KB)`:''}</span>
+        <div style="display:flex;gap:6px">
+          <button class="adj-pill" onclick="openAdjModal('pdf','${src}','${esc(a.nombre||'')}')">⛶ Ampliar</button>
+          <a class="adj-pill" href="${src}" download="${a.nombre||'archivo.pdf'}">⬇</a>
+        </div>
+      </div>
+      <iframe class="adj-pdf-frame" src="${src}" title="${esc(a.nombre||'')}"></iframe>
+    </div>`;
+  });
+  if(others.length){
+    html+=`<div class="adj-files">`;
+    others.forEach(a=>{
+      const icon=getFileIcon(a.nombre,a.tipo_contenido);
+      const kb=Math.round((a.tamaño_bytes||0)/1024);
+      if(a.content_bytes){
+        html+=`<a class="adj-pill" href="data:${a.tipo_contenido||'application/octet-stream'};base64,${a.content_bytes}" download="${a.nombre||'archivo'}">${icon} ${esc(a.nombre||'Archivo')} <span style="font-size:10px;opacity:.6">${kb>0?kb+'KB':''}</span></a>`;
       } else {
-        html += `<span class="adj-file" style="opacity:.5">📎 ${esc(a.nombre)}</span>`;
+        html+=`<span class="adj-pill" style="opacity:.5">${icon} ${esc(a.nombre||'Archivo')}</span>`;
       }
     });
-    html += `</div>`;
+    html+=`</div>`;
   }
-  
-  return html + `</div>`;
+  return html+`</div>`;
 }
 
-async function setStatus(id, status) {
-  await sb(`correos?id=eq.${id}`, 'PATCH', {
-    estado: status,
-    fecha_resolucion: ['solucionado', 'gestionado'].includes(status) ? new Date().toISOString() : null
-  });
-  await sb('historial', 'POST', {
-    correo_id: id,
-    accion: status,
-    agente_id: state.agent.id,
-    detalle: `Marcado como ${status} por ${state.agent.nombre}`,
-    fecha: new Date().toISOString()
-  });
-  showToast(`Correo: ${status}`, 'success');
-  closeDetail();
+function openAdjModal(type,src,nombre){
+  const modal=document.getElementById('adjModal'),content=document.getElementById('adjModalContent');
+  if(type==='img') content.innerHTML=`<div style="text-align:center"><div style="color:#94a3b8;font-size:12px;margin-bottom:10px">${esc(nombre)}</div><img src="${src}" style="max-width:90vw;max-height:85vh;object-fit:contain;border-radius:8px"></div>`;
+  else if(type==='pdf') content.innerHTML=`<iframe src="${src}" style="width:90vw;height:88vh;border:none;border-radius:8px"></iframe>`;
+  modal.classList.add('show');
+}
+function closeAdjModal(){document.getElementById('adjModal').classList.remove('show');}
+document.getElementById('adjModal').addEventListener('click',e=>{if(e.target===document.getElementById('adjModal'))closeAdjModal();});
+
+// ─── ACTIONS ─────────────────────────────────────────────────
+async function changeStatus(id, status) {
+  const email=state.emails.find(e=>e.id===id);
+  const patch={estado:status};
+  if(['solucionado','gestionado'].includes(status)) patch.fecha_resolucion=new Date().toISOString();
+  await sb(`correos?id=eq.${id}`,'PATCH',patch);
+  // Registrar en historial_eventos (compatible con n8n)
+  try {
+    await sb('historial_eventos','POST',{
+      correo_id:id, message_id:email?.message_id,
+      evento:`estado_${status}`,
+      from_email:email?.remitente, subject:email?.asunto,
+      received_at:email?.fecha,
+      metadata:{de:email?.estado,a:status,agente_id:state.currentAgent?.id,agente_nombre:state.currentAgent?.nombre}
+    });
+  } catch {
+    try{await sb('historial','POST',{correo_id:id,accion:status,detalle:`Agente: ${state.currentAgent?.nombre}`,fecha:new Date().toISOString()});}catch{}
+  }
+  showToast(`Marcado: ${status}`,'success');
   await loadMyEmails();
+  selectEmail(id);
 }
 
-async function saveNote() {
-  const id = state.selectedId;
-  const note = document.getElementById('notesInput').value.trim();
-  if (!id || !note) {
-    showToast('Escribe una nota primero', 'error');
-    return;
-  }
-  await sb('historial', 'POST', {
-    correo_id: id,
-    accion: 'nota',
-    agente_id: state.agent.id,
-    detalle: note,
-    fecha: new Date().toISOString()
-  });
-  showToast('Nota guardada', 'success');
+function toggleReply(id) {
+  const rw=document.getElementById('replyWrap');
+  const rb=document.getElementById('showReplyBtn');
+  const shown=rw&&rw.style.display!=='none';
+  if(rw) rw.style.display=shown?'none':'block';
+  if(rb) rb.style.display=shown?'':'none';
+  if(!shown && document.getElementById('replyText')) document.getElementById('replyText').focus();
 }
 
-async function syncData() {
-  await loadMyEmails();
-  document.getElementById('lastSyncLbl').textContent = `Actualizado ${new Date().toLocaleTimeString('es-CO')}`;
+async function sendReply(id) {
+  const email=state.emails.find(e=>e.id===id);
+  if(!email) return;
+  const body=document.getElementById('replyText')?.value?.trim();
+  if(!body){showToast('Escribe un mensaje','info');return;}
+  let exitoso=false,errMsg='';
+  try {
+    const token=await getGraphToken();
+    const r=await fetch(`https://graph.microsoft.com/v1.0/users/${GRAPH_USER_ID}/sendMail`,{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({message:{subject:'RE: '+email.asunto,body:{contentType:'HTML',content:`<p>${body.replace(/\n/g,'<br>')}</p>`},toRecipients:[{emailAddress:{address:email.remitente,name:email.remitente_nombre||email.remitente}}]},saveToSentItems:true})
+    });
+    if(r.ok||r.status===202){exitoso=true;showToast('Respuesta enviada ✓','success');if(document.getElementById('replyText'))document.getElementById('replyText').value='';toggleReply(id);}
+    else throw new Error(await r.text());
+  } catch(e){errMsg=e.message;showToast('Error: '+e.message.substring(0,60),'error');}
+  try{await sb('respuestas','POST',{correo_id:id,agente_id:state.currentAgent?.id,cuerpo:body,enviado_en:new Date().toISOString(),exitoso,error_msg:errMsg});}catch{}
+  try{await sb('historial_eventos','POST',{correo_id:id,message_id:email?.message_id,evento:'respuesta_enviada',from_email:email?.remitente,subject:email?.asunto,metadata:{exitoso,agente_id:state.currentAgent?.id,agente_nombre:state.currentAgent?.nombre}});}catch{}
 }
 
-function formatDate(d) {
-  const diff = new Date() - d;
-  if (diff < 60000) return 'ahora';
-  if (diff < 3600000) return Math.floor(diff / 60000) + ' min';
-  if (diff < 86400000) return Math.floor(diff / 3600000) + ' h';
-  if (diff < 604800000) return Math.floor(diff / 86400000) + ' d';
-  return d.toLocaleDateString('es-CO');
-}
-
-function esc(str) {
-  if (!str) return '';
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-function showToast(msg, type = 'info') {
-  const tc = document.getElementById('toasts');
-  const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  t.innerHTML = `<div class="toast-dot"></div><span>${msg}</span>`;
-  tc.appendChild(t);
-  setTimeout(() => t.remove(), 4000);
-}
-
-document.getElementById('detailOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeDetail();
-});
-document.getElementById('detailSheet').addEventListener('click', e => e.stopPropagation());
-document.getElementById('loginPin').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doLogin();
-});
-document.getElementById('loginNombre').addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('loginPin').focus();
-});
-
-(function init() {
-  const saved = sessionStorage.getItem('pqr_agent');
-  if (saved) {
-    try {
-      state.agent = JSON.parse(saved);
-      showApp();
-    } catch {
-      sessionStorage.removeItem('pqr_agent');
-    }
-  }
-})();
+// ─── UTILS ───────────────────────────────────────────────────
+function getFileIcon(n='',t=''){const e=(n.split('.').pop()||'').toLowerCase();if(e==='pdf')return '📄';if(['doc','docx'].includes(e))return '📝';if(['xls','xlsx','csv'].includes(e))return '📊';if(['ppt','pptx'].includes(e))return '📽';if(['zip','rar'].includes(e))return '🗜';if((t||'').startsWith('image/'))return '🖼';return '📎';}
+function formatDate(d){const now=new Date(),diff=now-d;if(isNaN(diff))return '—';if(diff<60000)return 'ahora';if(diff<3600000)return Math.floor(diff/60000)+'m';if(diff<86400000)return Math.floor(diff/3600000)+'h';if(diff<604800000)return Math.floor(diff/86400000)+'d';return d.toLocaleDateString('es-CO');}
+function esc(s){if(!s)return '';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function showToast(msg,type='info'){const tc=document.getElementById('toasts'),t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`<span>${msg}</span>`;tc.appendChild(t);setTimeout(()=>t.remove(),4000);}
 </script>
 </body>
 </html>
