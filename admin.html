@@ -460,12 +460,12 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;min-
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 // ─── CONFIG (desde config.js inyectado por GitHub Actions) ───
-const SUPABASE_URL = (window.CONFIG||{}).SUPABASE_URL
-const SUPABASE_KEY = (window.CONFIG||{}).SUPABASE_KEY
-const GRAPH_TENANT    = (window.CONFIG||{}).GRAPH_TENANT
-const GRAPH_CLIENT_ID = (window.CONFIG||{}).GRAPH_CLIENT_ID
-const GRAPH_SECRET    = (window.CONFIG||{}).GRAPH_SECRET
-const GRAPH_USER_ID   = (window.CONFIG||{}).GRAPH_USER_ID
+const SUPABASE_URL = (window.CONFIG||{}).SUPABASE_URL;
+const SUPABASE_KEY = (window.CONFIG||{}).SUPABASE_KEY;
+const GRAPH_TENANT    = (window.CONFIG||{}).GRAPH_TENANT;
+const GRAPH_CLIENT_ID = (window.CONFIG||{}).GRAPH_CLIENT_ID;
+const GRAPH_SECRET    = (window.CONFIG||{}).GRAPH_SECRET;
+const GRAPH_USER_ID   = (window.CONFIG||{}).GRAPH_USER_ID;
 
 // ─── MAPEO DE CAMPOS n8n → UI ───────────────────────────────
 // n8n guarda: subject, from_email, from_name, received_at, body_content, body_type, has_attachments, is_read
@@ -1049,4 +1049,5 @@ function showToast(msg,type='info'){
 </script>
 </body>
 </html>
+
 
